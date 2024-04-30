@@ -1,48 +1,61 @@
 import * as React from 'react';
-import Typography from '@mui/joy/Typography';
-import Card from '@mui/joy/Card';
-import List from '@mui/joy/List';
-import ListDivider from '@mui/joy/ListDivider';
-import ListItem from '@mui/joy/ListItem';
-import ListItemContent from '@mui/joy/ListItemContent';
-import ListItemButton from '@mui/joy/ListItemButton';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import { Visita } from '../config/Visite';
+import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
 
-const data = [
-    {
-        src: 'https://images.unsplash.com/photo-1502657877623-f66bf489d236',
-        title: 'Night view',
-        description: '4.21M views',
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1527549993586-dff825b37782',
-        title: 'Lake view',
-        description: '4.74M views',
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1532614338840-ab30cf10ed36',
-        title: 'Mountain view',
-        description: '3.98M views',
-    },
-];
+interface CardProps {
+    visite: Visita[];
+}
 
-export default function ListStackRatio() {
+const ListStackRatio: React.FC<CardProps> = ({ visite }) => {
     return (
-        <Card variant="outlined" sx={{ width: 300, p: 0 }}>
-            <List sx={{ py: 'var(--ListDivider-gap)' }}>
-                {data.map((item, index) => (
-                    <React.Fragment key={item.title}>
-                        <ListItem>
-                            <ListItemButton sx={{ gap: 2 }}>
-                                <ListItemContent>
-                                    <Typography fontWeight="md">{item.title}</Typography>
-                                    <Typography level="body-sm">{item.description}</Typography>
-                                </ListItemContent>
-                            </ListItemButton>
-                        </ListItem>
-                        {index !== data.length - 1 && <ListDivider />}
-                    </React.Fragment>
-                ))}
-            </List>
+        <Card sx={{ minWidth: 275 }}>
+            {visite.map((v, index) => (
+                <React.Fragment key={index}>
+                    <CardContent>
+                        <Typography variant="h5" component="div">
+                            {v.name}
+                        </Typography>
+                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                            {v.description}
+                        </Typography>
+                        <Typography variant="h5" component="div">
+                            {v.priority}
+                        </Typography>
+                    </CardContent>
+                </React.Fragment>
+            ))}
+            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                <Button
+                    size="sm"
+                    variant="soft"
+                    color="primary"
+                >
+                    Visualizza
+                </Button>
+
+                <Button
+                    size="sm"
+                    variant="soft"
+                    color="warning"
+                >
+                    Modifica
+                </Button>
+
+                <Button
+                    size="sm"
+                    variant="soft"
+                    color="danger"
+                >
+                    Elimina
+                </Button>
+
+            </Box>
         </Card>
     );
 }
+
+export default ListStackRatio;
