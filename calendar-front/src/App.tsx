@@ -7,8 +7,10 @@ import { CardShow } from './components/ShowCard'
 function App() {
   return (
     <div className='App'>
-      <DataPicker />
-      <CardShow />
+      <div className="background-container">
+        <DataPicker />
+        <CardShow />
+      </div>
     </div>
   );
 }
