@@ -3,16 +3,18 @@ import { Visita } from '../config/Visite';
 import Slider from "./Slider"
 import { Modal, Box } from "@mui/material";
 
+
 //components
 import Card from "./Card";
+
 
 let typeModel: number = 0;
 
 const Slideprops = {
-    slideMargin: 10,
-    zoomFactor: 5,
-    maxVisibleSlides: 5,
-    pageTransition: 500
+    slide_margin: 10,
+    zoom_factor: 5,
+    max_visible_slides: 5,
+    page_transition: 500
 };
 
 const style = {
@@ -29,19 +31,16 @@ const style = {
 
 
 
-export const CardShow: React.FC = () => {
+export const CardShow: React.FC<{ onOpenModal: (n: number, visita?: Visita) => void }> = ({ onOpenModal }) => {
     const [data, setData] = useState<Visita[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [activeCard, setActiveCard] = useState<Visita>();
 
-    const handleDialogOpen = (visita: Visita, n: boolean) => {
+    const handleDialogOpen = (n: number, visita?: Visita) => {
         setIsDialogOpen(true);
         setActiveCard(visita);
-        if (n === false) {
-            typeModel = 1;
-        } else {
-            typeModel = 2;
-        }
+        typeModel = n;
+
     };
 
 
@@ -77,35 +76,45 @@ export const CardShow: React.FC = () => {
             name: 'Lake view',
             description: '4.74M views',
             priority: 1,
-            date_visit: new Date('2024-05-12')
+            date_visit: new Date('2024-05-12'),
+            email: 'adkmvoadvokm@gmail.com',
+            tel: '+39323253252'
         },
         {
             id: 3,
             name: 'Mountain view',
             description: '3.98M views',
             priority: 1,
-            date_visit: new Date('2024-04-03')
+            date_visit: new Date('2024-04-03'),
+            email: 'adkmvoadvokm@gmail.com',
+            tel: '+39323253252'
         },
         {
             id: 4,
             name: 'Mountain view',
             description: '3.98M views',
             priority: 1,
-            date_visit: new Date('2024-02-03')
+            date_visit: new Date('2024-02-03'),
+            email: 'adkmvoadvokm@gmail.com',
+            tel: '+39323253252'
         },
         {
             id: 5,
             name: 'Mountain view',
             description: '3.98M views',
             priority: 1,
-            date_visit: new Date('2024-05-01')
+            date_visit: new Date('2024-05-01'),
+            email: 'adkmvoadvokm@gmail.com',
+            tel: '+39323253252'
         },
         {
             id: 6,
             name: 'Mountain view',
             description: '3.98M views',
             priority: 1,
-            date_visit: new Date('2024-05-05')
+            date_visit: new Date('2024-05-05'),
+            email: 'adkmvoadvokm@gmail.com',
+            tel: '+39323253252'
         },
 
     ];
@@ -120,16 +129,20 @@ export const CardShow: React.FC = () => {
                     <Box sx={style}>
                         {activeCard && (
 
-                            <Card visite={[activeCard]} onOpenModal={handleDialogOpen} typo={typeModel} />
+                            <Card visiteData={[activeCard]} onOpenModal={handleDialogOpen} typo={typeModel} />
                         )}
                     </Box>
                 </Modal>
 
-                <Slider {...Slideprops}>
-                    {dati.map((visita, index) => (
-                        <Card key={index} visite={[visita]} onOpenModal={handleDialogOpen} typo={0} />
-                    ))}
-                </Slider>
+                <>
+                    <Slider {...Slideprops}>
+                        {dati.map((visita, index) => (
+                            <Card key={index} visiteData={[visita]} onOpenModal={handleDialogOpen} typo={0} />
+                        ))}
+                    </Slider>
+
+
+                </>
 
 
             </div>

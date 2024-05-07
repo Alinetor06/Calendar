@@ -6,10 +6,10 @@ import { StyledSliderWrapper, StyledSlider } from './SliderStyles';
 // Types
 type SliderProps = {
   children?: any;
-  zoomFactor: number;
-  slideMargin: number;
-  maxVisibleSlides: number;
-  pageTransition: number;
+  zoom_factor: number;
+  slide_margin: number;
+  max_visible_slides: number;
+  page_transition: number;
 };
 
 const numberOfSlides = (maxVisibleSlides: number, windowWidth: number) => {
@@ -21,20 +21,20 @@ const numberOfSlides = (maxVisibleSlides: number, windowWidth: number) => {
 
 const Slider: React.FC<SliderProps> = ({
   children,
-  zoomFactor,
-  slideMargin,
-  maxVisibleSlides,
-  pageTransition
+  zoom_factor,
+  slide_margin,
+  max_visible_slides,
+  page_transition
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [transformValue, setTransformValue] = useState(`-${zoomFactor / 2}%`);
+  const [transformValue, setTransformValue] = useState(`-${zoom_factor / 2}%`);
   const [scrollSize, setScrollSize] = useState(0);
 
   const sliderRef = useRef<HTMLElement>(null);
 
-  const visibleSlides = numberOfSlides(maxVisibleSlides, scrollSize);
+  const visible_slides = numberOfSlides(max_visible_slides, scrollSize);
   // Pages start at 0, therefore -1 at the end here
-  const totalPages: number = Math.ceil(children.length / visibleSlides) - 1;
+  const totalPages: number = Math.ceil(children.length / visible_slides) - 1;
 
   useEffect(() => {
     if (sliderRef && sliderRef.current) {
@@ -60,7 +60,7 @@ const Slider: React.FC<SliderProps> = ({
     if (sliderRef.current) sliderRef.current.style.pointerEvents = 'none';
     setTimeout(() => {
       if (sliderRef.current) sliderRef.current.style.pointerEvents = 'all';
-    }, pageTransition);
+    }, page_transition);
   };
 
   const handleSlideMove = (forward: boolean) => {
@@ -73,12 +73,12 @@ const Slider: React.FC<SliderProps> = ({
   };
 
   const handleMouseOver = (id: number) => {
-    if (id % visibleSlides === 1) setTransformValue('0%'); // left
-    if (id % visibleSlides === 0) setTransformValue(`-${zoomFactor}%`); // right
+    if (id % visible_slides === 1) setTransformValue('0%'); // left
+    if (id % visible_slides === 0) setTransformValue(`-${zoom_factor}%`); // right
   };
 
   const handleMouseOut = () => {
-    setTransformValue(`-${zoomFactor / 2}%`);
+    setTransformValue(`-${zoom_factor / 2}%`);
   };
 
   const assignSlideClass = (index: number, visibleSlides: number) => {
@@ -87,22 +87,22 @@ const Slider: React.FC<SliderProps> = ({
   };
 
   return (
-    <StyledSliderWrapper zoomFactor={zoomFactor} visibleSlides={visibleSlides}>
+    <StyledSliderWrapper zoom_factor={zoom_factor} visible_slides={visible_slides}>
       <StyledSlider
-        visibleSlides={visibleSlides}
-        transformValue={transformValue}
-        zoomFactor={zoomFactor}
-        slideMargin={slideMargin}
-        pageTransition={pageTransition}
+        visible_slides={visible_slides}
+        transform_value={transformValue}
+        zoom_factor={zoom_factor}
+        slide_margin={slide_margin}
+        page_transition={page_transition}
         ref={sliderRef}
       >
         {children.map((child: any, i: any) => (
           <SliderItem
             key={i}
-            slideMargin={slideMargin}
-            visibleSlides={visibleSlides}
-            zoomFactor={zoomFactor}
-            slideClass={assignSlideClass(i + 1, visibleSlides)}
+            slide_margin={slide_margin}
+            visible_slides={visible_slides}
+            zoom_factor={zoom_factor}
+            slideClass={assignSlideClass(i + 1, visible_slides)}
             id={i + 1}
             callback={handleMouseOver}
             callbackOut={handleMouseOut}

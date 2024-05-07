@@ -1,10 +1,10 @@
 export type Visita = {
     id: number
     name: string
-    email?: string
+    email: string
     description: string
     priority: number
-    tel?: string
+    tel: string
     date_visit: Date
 }
 

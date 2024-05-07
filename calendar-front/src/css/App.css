@@ -13,6 +13,16 @@
   align-items: center;
 }
 
+.calendar_display {
+  display: flex;
+  flex-direction: row;
+  background-color: whitesmoke;
+  align-items: flex-end;
+  border-top-left-radius: 10%;
+  border-top-right-radius: 10%;
+  box-shadow: 2px 2px #8e8e8e;
+}
+
 .card_info {
   border-radius: 10px;
   margin: 5px;
@@ -71,14 +81,6 @@
   margin-bottom: 10px;
 }
 
-.css-1rtg91x-MuiDateCalendar-root {
-  background-color: whitesmoke;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  width: 55%;
-  box-shadow: 3px 2px 10px 5px #888888 !important;
-}
-
 .css-1wy8uaa-MuiButtonBase-root-MuiPickersDay-root {
   font-size: 1.5rem;
 }
@@ -97,4 +99,10 @@
 
 .css-1evfmy9-JoyCard-root {
   width: 70%;
+}
+
+.css-78trlr-MuiButtonBase-root-MuiIconButton-root {
+  margin: 7.5px;
+  padding: 10px;
+  border: solid mediumseagreen;
 }

@@ -8,6 +8,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { green } from '@mui/material/colors';
 import CheckIcon from '@mui/icons-material/Check';
 
+
 function getRandomNumber(min: number, max: number) {
     return Math.round(Math.random() * (max - min) + min);
 }
@@ -95,20 +96,23 @@ export default function DateCalendarServerRequest() {
     };
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateCalendar
-                defaultValue={initialValue}
-                loading={isLoading}
-                onMonthChange={handleMonthChange}
-                slots={{
-                    day: ServerDay,
-                }}
-                slotProps={{
-                    day: {
-                        highlightedDays,
-                    } as any,
-                }}
-            />
-        </LocalizationProvider>
+        <>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateCalendar
+                    defaultValue={initialValue}
+                    loading={isLoading}
+                    onMonthChange={handleMonthChange}
+                    slots={{
+                        day: ServerDay,
+                    }}
+                    slotProps={{
+                        day: {
+                            highlightedDays,
+                        } as any,
+                    }}
+                />
+            </LocalizationProvider>
+
+        </>
     );
 }

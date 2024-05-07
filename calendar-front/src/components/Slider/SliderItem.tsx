@@ -5,18 +5,18 @@ import { StyledSliderItem } from './SliderItemStyles';
 type SliderItemProps = {
   children: any
   slideClass: string;
-  zoomFactor: number;
+  zoom_factor: number;
   id: number;
   callback: (id: number) => void;
   callbackOut: () => void;
-  slideMargin: number;
-  visibleSlides: number;
+  slide_margin: number;
+  visible_slides: number;
 };
 
 const SliderItem: React.FC<SliderItemProps> = ({
-  slideMargin,
-  visibleSlides,
-  zoomFactor,
+  slide_margin,
+  visible_slides,
+  zoom_factor,
   slideClass,
   id,
   callback,
@@ -24,9 +24,9 @@ const SliderItem: React.FC<SliderItemProps> = ({
   children
 }) => (
   <StyledSliderItem
-    zoomFactor={zoomFactor}
-    slideMargin={slideMargin}
-    visibleSlides={visibleSlides}
+    zoom_factor={zoom_factor}
+    slide_margin={slide_margin}
+    visible_slides={visible_slides}
     className={slideClass}
     onMouseOver={() => callback(id)}
     onMouseOut={callbackOut}

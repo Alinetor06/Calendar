@@ -1,42 +1,95 @@
 import * as React from 'react';
 import { Card, CardContent, Typography, TextField } from '@mui/material';
-import { Visita } from '../config/Visite';
 import { Box, Button } from '@mui/joy';
 import { useState } from 'react';
+import GenericField from './GenericField';
+
+//configurazioni
+import { Visita } from '../config/Visite';
 
 
 
 interface CardProps {
-    visite: Visita[];
-    onOpenModal: (visita: Visita, n: boolean) => void;
+    visiteData: Visita[];
+    onOpenModal: (n: number, visita?: Visita) => void;
     typo: number
 }
 
-const ListStackRatio: React.FC<CardProps> = ({ visite, onOpenModal, typo }) => {
+const getDateOnly = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // aggiunge lo zero iniziale se necessario
+    const day = date.getDate().toString().padStart(2, '0'); // aggiunge lo zero iniziale se necessario
+    return `${year}-${month}-${day}`;
+};
+
+
+const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo }) => {
 
     const today = new Date();
 
-    const [updatedVisite, setUpdatedVisite] = useState(visite);
+    /**
+     * 
+     * UPDATE VISITE
+     * 
+     */
+
+    const [updatedVisite, setUpdatedVisite] = useState(visiteData);
 
     // Funzione per gestire la modifica della data di visita
-    const handleDateChange = (index: number, newDate: string) => {
-        // Converti la stringa della nuova data in un oggetto Date
-        const dateObject = new Date(newDate);
-
-        // Copia l'array delle visite e aggiorna la data di visita della visita corrente
+    const handleFieldChange = <T extends keyof typeof updatedVisite[0]>(index: number, field: T, value: typeof updatedVisite[0][T]) => {
+        // Clona l'array updatedVisite per modificare solo l'elemento specifico
         const updatedVisiteCopy = [...updatedVisite];
-        updatedVisiteCopy[index].date_visit = dateObject;
-
-        // Aggiorna lo stato con le visite aggiornate
+        // Aggiorna il campo specificato dell'elemento specificato con il nuovo valore
+        updatedVisiteCopy[index][field] = value;
+        // Aggiorna lo stato con il nuovo array aggiornato
         setUpdatedVisite(updatedVisiteCopy);
     };
+
+
+    /**
+    * 
+    * SAVE VISITE
+    * 
+    */
+
+
+
+    const [visite, setVisite] = useState(visiteData);
+
+    const [newVisit, setNewVisit] = useState<Visita>({
+        id: 0,
+        name: '',
+        email: '',
+        priority: 0,
+        date_visit: new Date(),
+        description: '',
+        tel: ''
+    });
+
+
+    const handleSaveNewVisit = () => {
+        // Aggiungi la nuova visita all'array visite
+        setVisite([...visite, newVisit]);
+        // Resettare lo stato per prepararsi alla creazione di una nuova visita
+        setNewVisit({
+            id: 0,
+            name: '',
+            email: '',
+            priority: 0,
+            date_visit: new Date(),
+            description: '',
+            tel: ''
+            // Rimuovi il carattere / in eccesso
+        });
+    };
+
 
 
     if (typo === 0) {
         return (
             <>
                 <Card sx={{ minWidth: 275 }}>
-                    {visite.map((v, index) => {
+                    {visiteData.map((v, index) => {
                         const visitDate = new Date(v.date_visit);
                         const isPastDate = visitDate < today;
 
@@ -58,7 +111,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visite, onOpenModal, typo }) => {
                                         size="sm"
                                         variant="soft"
                                         color="primary"
-                                        onClick={() => onOpenModal(v, false)}
+                                        onClick={() => onOpenModal(1, v)}
                                     >
                                         Visualizza
                                     </Button>
@@ -68,7 +121,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visite, onOpenModal, typo }) => {
                                         variant="soft"
                                         color="warning"
                                         disabled={isPastDate} // Disabilita il bottone se la data è nel passato
-                                        onClick={() => onOpenModal(v, true)}
+                                        onClick={() => onOpenModal(2, v)}
                                     >
                                         Modifica
                                     </Button>
@@ -94,7 +147,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visite, onOpenModal, typo }) => {
         return (
             <>
                 <Card sx={{ minWidth: 275 }}>
-                    {visite.map((v, index) => {
+                    {visiteData.map((v, index) => {
                         const visitDate = new Date(v.date_visit);
                         const isPastDate = visitDate < today;
 
@@ -135,7 +188,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visite, onOpenModal, typo }) => {
                                         variant="soft"
                                         color="warning"
                                         disabled={isPastDate} // Disabilita il bottone se la data è nel passato
-                                        onClick={() => onOpenModal(v, true)}
+                                        onClick={() => onOpenModal(2, v)}
                                     >
                                         Modifica
                                     </Button>
@@ -157,10 +210,10 @@ const ListStackRatio: React.FC<CardProps> = ({ visite, onOpenModal, typo }) => {
             </>
         );
     }
-    else {
+    if (typo === 2) {
         return (
             <Card sx={{ minWidth: 275 }}>
-                {visite.map((v, index) => {
+                {visiteData.map((v, index) => {
 
                     return (
                         <React.Fragment key={index}>
@@ -170,62 +223,45 @@ const ListStackRatio: React.FC<CardProps> = ({ visite, onOpenModal, typo }) => {
                                 </Typography>
                                 <div className='edit_visit_Model'>
                                     <div className='row_card_1'>
-                                        <TextField
-                                            sx={{ mb: 1.5, ml: 1 }}
+                                        <GenericField
                                             label="Nome"
-                                            variant="standard"
-                                            defaultValue={v.name}
-                                            onChange={(e) => {
-                                                // Aggiorna il valore del campo nel tuo stato
-                                            }}
+                                            value={v.name}
+                                            onChange={(newValue) => handleFieldChange(index, 'name', newValue)}
                                         />
 
-                                        <TextField
-                                            sx={{ mb: 1.5, ml: 1 }}
-                                            label='Email'
-                                            variant="standard"
-                                            defaultValue={v.email}
-                                            onChange={(e) => handleDateChange(index, e.target.value)}
+                                        <GenericField
+                                            label="Email"
+                                            value={v.email}
+                                            onChange={(newValue) => handleFieldChange(index, 'email', newValue)}
+                                            placeholder="es. abcdefghi@abcde.abc"
                                         />
 
-                                        <TextField
-                                            sx={{ mb: 1.5, ml: 1 }}
+                                        <GenericField
                                             label="Priorità"
-                                            variant="standard"
-                                            defaultValue={v.priority}
-                                            onChange={(e) => {
-                                                // Aggiorna il valore del campo nel tuo stato
-                                            }}
+                                            value={v.priority}
+                                            onChange={(newValue) => handleFieldChange(index, 'priority', newValue)}
                                         />
                                     </div>
                                     <div className='row_card_2'>
 
-                                        <TextField
-                                            sx={{ mb: 1.5, ml: 1 }}
+                                        <GenericField
                                             label='Data della Visita'
-                                            type="date"
-                                            defaultValue={v.date_visit ? v.date_visit.toISOString().split('T')[0] : ''}
-                                            onChange={(e) => handleDateChange(index, e.target.value)}
+                                            value={getDateOnly(v.date_visit)}
+                                            onChange={(newValue) => handleFieldChange(index, 'date_visit', new Date(newValue))}
+                                            placeholder="es. YYYY-MM-DD"
                                         />
 
-                                        <TextField
-                                            sx={{ mb: 1.5, ml: 1 }}
+                                        <GenericField
                                             label="Descrizione"
-                                            variant="standard"
-                                            defaultValue={v.description}
-                                            onChange={(e) => {
-                                                // Aggiorna il valore del campo nel tuo stato
-                                            }}
+                                            value={v.description}
+                                            onChange={(newValue) => handleFieldChange(index, 'description', newValue)}
                                         />
 
-                                        <TextField
-                                            sx={{ mb: 1.5, ml: 1 }}
+                                        <GenericField
                                             label="Telefono"
-                                            variant="standard"
-                                            defaultValue={v.tel}
-                                            onChange={(e) => {
-                                                // Aggiorna il valore del campo nel tuo stato
-                                            }}
+                                            value={v.tel}
+                                            onChange={(newValue) => handleFieldChange(index, 'tel', newValue)}
+                                            placeholder="es. +39 0123456789 "
                                         />
                                     </div>
                                 </div>
@@ -253,6 +289,93 @@ const ListStackRatio: React.FC<CardProps> = ({ visite, onOpenModal, typo }) => {
                         </React.Fragment>
                     );
                 })}
+            </Card>
+        );
+    }
+    else {
+        return (
+            <Card sx={{ minWidth: 275 }}>
+                <CardContent>
+                    <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
+                        Creazione Visita:
+                    </Typography>
+                    <div className='edit_visit_Model'>
+                        <div className='row_card_1'>
+                            <TextField
+                                sx={{ mb: 1.5, ml: 1 }}
+                                label="Nome"
+                                variant="standard"
+                                value={newVisit.name} // Nuovo stato per contenere i dati della nuova visita
+                                onChange={(e) => setNewVisit({ ...newVisit, name: e.target.value })} // Aggiorna il valore del campo nel nuovo stato
+                            />
+
+                            <TextField
+                                sx={{ mb: 1.5, ml: 1 }}
+                                label='Email'
+                                variant="standard"
+                                value={newVisit.email} // Nuovo stato per contenere i dati della nuova visita
+                                onChange={(e) => setNewVisit({ ...newVisit, email: e.target.value })} // Aggiorna il valore del campo nel nuovo stato
+                            />
+
+                            <TextField
+                                sx={{ mb: 1.5, ml: 1 }}
+                                label="Priorità"
+                                variant="standard"
+                                type='number'
+                                value={newVisit.priority} // Nuovo stato per contenere i dati della nuova visita
+                                onChange={(e) => setNewVisit({ ...newVisit, priority: parseInt(e.target.value) || 0 })} // Aggiorna il valore del campo nel nuovo stato
+                            />
+                        </div>
+                        <div className='row_card_2'>
+                            <TextField
+                                sx={{ mb: 1.5, ml: 1 }}
+                                label='Data della Visita'
+                                type="date"
+                                value={newVisit.date_visit} // Nuovo stato per contenere i dati della nuova visita
+                                onChange={(e) => setNewVisit({ ...newVisit, date_visit: new Date(e.target.value) })} // Aggiorna il valore del campo nel nuovo stato
+                            />
+
+
+                            <TextField
+                                sx={{ mb: 1.5, ml: 1 }}
+                                label="Descrizione"
+                                variant="standard"
+                                defaultValue={newVisit.description}
+                                onChange={(e) => {
+                                    // Aggiorna il valore del campo nel tuo stato
+                                }}
+                            />
+
+                            <TextField
+                                sx={{ mb: 1.5, ml: 1 }}
+                                label="Telefono"
+                                variant="standard"
+                                defaultValue={newVisit.tel}
+                                onChange={(e) => {
+                                    // Aggiorna il valore del campo nel tuo stato
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                        <Button
+                            size="sm"
+                            variant="soft"
+                            color="success"
+                            onClick={handleSaveNewVisit} // Funzione per salvare la nuova visita
+                        >
+                            Salva
+                        </Button>
+
+                        <Button
+                            size="sm"
+                            variant="soft"
+                            color="danger"
+                        >
+                            Annulla
+                        </Button>
+                    </Box>
+                </CardContent>
             </Card>
         );
     }

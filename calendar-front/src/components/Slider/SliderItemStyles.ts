@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 
 type Props = {
-  zoomFactor: number;
-  slideMargin: number;
-  visibleSlides: number;
+  zoom_factor: number;
+  slide_margin: number;
+  visible_slides: number;
   className: string;
 };
 
 export const StyledSliderItem = styled.div<Props>`
-  margin: 0 ${(props) => props.slideMargin}px;
+  margin: 0 ${(props) => props.slide_margin}px;
   transition: transform 500ms ease;
   border-radius: 20px;
   cursor: pointer;
@@ -21,12 +21,12 @@ export const StyledSliderItem = styled.div<Props>`
 
   flex: 0 0
     calc(
-      100% / ${(props) => props.visibleSlides} -
-        ${(props) => props.slideMargin * 2}px
+      100% / ${(props) => props.visible_slides} -
+        ${(props) => props.slide_margin * 2}px
     );
 
   :hover {
-    transform: scale(${(props) => props.zoomFactor / 100 + 1}) !important;
+    transform: scale(${(props) => props.zoom_factor / 100 + 1}) !important;
   }
 
   &.left {

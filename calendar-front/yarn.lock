@@ -912,6 +912,11 @@
   "resolved" "https://registry.npmjs.org/@types/estree/-/estree-1.0.5.tgz"
   "version" "1.0.5"
 
+"@types/fg-loadcss@^3.1.3":
+  "integrity" "sha512-l9Cf3szP7MbYXRuWnnctz6BRRADeGIakbY7+FtZSvvV+Rg+Ytv961FcXBtwpQrdjCbd4lIyawBADayxKA2GiaA=="
+  "resolved" "https://registry.npmjs.org/@types/fg-loadcss/-/fg-loadcss-3.1.3.tgz"
+  "version" "3.1.3"
+
 "@types/json-schema@^7.0.15":
   "integrity" "sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA=="
   "resolved" "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.15.tgz"
@@ -1784,6 +1789,11 @@
   "version" "1.17.1"
   dependencies:
     "reusify" "^1.0.4"
+
+"fg-loadcss@^3.1.0":
+  "integrity" "sha512-UgtXKza8nBUO6UWW4c+MOprRL4W5WbIkzPJafnw6y6f5jhA3FiSZkWz8eXeAeX+mC4A/qq0ByDLiAk6erNARaQ=="
+  "resolved" "https://registry.npmjs.org/fg-loadcss/-/fg-loadcss-3.1.0.tgz"
+  "version" "3.1.0"
 
 "file-entry-cache@^6.0.1":
   "integrity" "sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg=="

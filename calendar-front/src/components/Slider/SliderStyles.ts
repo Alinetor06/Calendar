@@ -2,16 +2,16 @@ import styled from 'styled-components';
 import { StyledSliderItem } from './SliderItemStyles';
 
 type SliderWrapperProps = {
-  zoomFactor: number;
-  visibleSlides: number;
+  zoom_factor: number;
+  visible_slides: number;
 };
 
 type SliderProps = {
-  visibleSlides: number;
-  transformValue: string;
-  zoomFactor: number;
-  slideMargin: number;
-  pageTransition: number;
+  visible_slides: number;
+  transform_value: string;
+  zoom_factor: number;
+  slide_margin: number;
+  page_transition: number;
   ref: any;
 };
 
@@ -19,14 +19,14 @@ export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
   overflow: hidden;
   position: relative;
   margin-bottom: 20px;
-  padding: ${(props) => (props.zoomFactor / props.visibleSlides) * 0.7 + '%'} 0;
+  padding: ${(props) => (props.zoom_factor / props.visible_slides) * 0.7 + '%'} 0;
 
   .button-wrapper {
     position: absolute;
     width: 55px;
     height: 100%;
     top: 0;
-    padding: ${(props) => props.zoomFactor / 7 + '%'} 0;
+    padding: ${(props) => props.zoom_factor / 7 + '%'} 0;
     box-sizing: border-box;
   }
 
@@ -66,9 +66,9 @@ export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
 export const StyledSlider = styled.div<SliderProps>`
   display: flex;
   padding: 0 55px;
-  transition: transform ${(props) => props.pageTransition}ms ease;
+  transition: transform ${(props) => props.page_transition}ms ease;
 
   :hover ${StyledSliderItem} {
-    transform: translateX(${(props) => props.transformValue});
+    transform: translateX(${(props) => props.transform_value});
   }
 `;
