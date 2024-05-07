@@ -35,14 +35,6 @@ export const DataPicker: React.FC<DataPickerProps> = ({ onOpenModal }) => {
             <h1 className='header-text-calendar'>Calendar </h1>
             <>
                 <div className="calendar_display">
-                    <Modal onClose={handleDialogClose} open={isDialogOpen} >
-                        <Box sx={style}>
-                            {activeCard && (
-
-                                <Card visiteData={[activeCard]} onOpenModal={handleDialogOpen} typo={2} />
-                            )}
-                        </Box>
-                    </Modal>
 
                     <Calendar />
                     <IconButton onClick={() => onOpenModal(3)}>
