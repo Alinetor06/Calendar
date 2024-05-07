@@ -291,62 +291,58 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo, at
                         Creazione Visita:
                     </Typography>
                     <div className='edit_visit_Model'>
-                        <div className='row_card_1'>
-                            <TextField
-                                sx={{ mb: 1.5, ml: 1 }}
+                        <Box component="form"
+                            sx={{
+                                '& .MuiTextField-root': { m: 1, width: '25ch' },
+                            }}>
+                            <GenericField
                                 label="Nome"
-                                variant="standard"
-                                value={newVisit.name} // Nuovo stato per contenere i dati della nuova visita
-                                onChange={(e) => setNewVisit({ ...newVisit, name: e.target.value })} // Aggiorna il valore del campo nel nuovo stato
+                                value={newVisit.name}
+                                onChange={(newValue) => handleFieldChange(visiteData.length + 1, 'name', newValue)}
+                                disabled={!attivo}
                             />
 
-                            <TextField
-                                sx={{ mb: 1.5, ml: 1 }}
-                                label='Email'
-                                variant="standard"
-                                value={newVisit.email} // Nuovo stato per contenere i dati della nuova visita
-                                onChange={(e) => setNewVisit({ ...newVisit, email: e.target.value })} // Aggiorna il valore del campo nel nuovo stato
+                            <GenericField
+                                label="Email"
+                                value={newVisit.email}
+                                onChange={(newValue) => handleFieldChange(visiteData.length + 1, 'email', newValue)}
+                                placeholder="es. abcdefghi@abcde.abc"
+                                disabled={!attivo}
                             />
 
-                            <TextField
-                                sx={{ mb: 1.5, ml: 1 }}
+                            <GenericField
                                 label="Priorità"
-                                variant="standard"
-                                type='number'
-                                value={newVisit.priority} // Nuovo stato per contenere i dati della nuova visita
-                                onChange={(e) => setNewVisit({ ...newVisit, priority: parseInt(e.target.value) || 0 })} // Aggiorna il valore del campo nel nuovo stato
+                                value={newVisit.priority}
+                                onChange={(newValue) => handleFieldChange(visiteData.length + 1, 'priority', newValue)}
+                                disabled={!attivo}
                             />
-                        </div>
-                        <div className='row_card_2'>
-                            <TextField
-                                sx={{ mb: 1.5, ml: 1 }}
+
+
+
+                            <GenericField
                                 label='Data della Visita'
-                                type="date"
-                                value={newVisit.date_visit} // Nuovo stato per contenere i dati della nuova visita
-                                onChange={(e) => setNewVisit({ ...newVisit, date_visit: new Date(e.target.value) })} // Aggiorna il valore del campo nel nuovo stato
+                                value={getDateOnly(newVisit.date_visit)}
+                                onChange={(newValue) => handleFieldChange(visiteData.length + 1, 'date_visit', new Date(newValue))}
+                                placeholder="es. YYYY-MM-DD"
+                                disabled={!attivo}
                             />
 
-
-                            <TextField
-                                sx={{ mb: 1.5, ml: 1 }}
+                            <GenericField
                                 label="Descrizione"
-                                variant="standard"
-                                defaultValue={newVisit.description}
-                                onChange={(e) => {
-                                    // Aggiorna il valore del campo nel tuo stato
-                                }}
+                                value={newVisit.description}
+                                onChange={(newValue) => handleFieldChange(visiteData.length + 1, 'description', newValue)}
+                                disabled={!attivo}
                             />
 
-                            <TextField
-                                sx={{ mb: 1.5, ml: 1 }}
+                            <GenericField
                                 label="Telefono"
-                                variant="standard"
-                                defaultValue={newVisit.tel}
-                                onChange={(e) => {
-                                    // Aggiorna il valore del campo nel tuo stato
-                                }}
+                                value={newVisit.tel}
+                                onChange={(newValue) => handleFieldChange(visiteData.length + 1, 'tel', newValue)}
+                                placeholder="es. +39 0123456789 "
+                                disabled={!attivo}
                             />
-                        </div>
+
+                        </Box>
                     </div>
                     <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                         <Button

@@ -7,7 +7,7 @@ interface FieldProps<T> {
     value: T;
     onChange: (value: T) => void;
     placeholder?: string; // Aggiungi questa riga
-    disabled: boolean
+    disabled?: boolean
 }
 
 const priority_value = [
