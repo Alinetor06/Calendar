@@ -10,6 +10,8 @@ import Card from "./Card";
 
 let typeModel: number = 0;
 
+let mod_att: boolean;
+
 const Slideprops = {
     slide_margin: 10,
     zoom_factor: 5,
@@ -31,18 +33,17 @@ const style = {
 
 
 
-export const CardShow: React.FC<{ onOpenModal: (n: number, visita?: Visita) => void }> = ({ onOpenModal }) => {
+export const CardShow: React.FC<{ onOpenModal: (n: number, attiva: boolean, visita?: Visita) => void }> = ({ onOpenModal }) => {
     const [data, setData] = useState<Visita[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [activeCard, setActiveCard] = useState<Visita>();
 
-    const handleDialogOpen = (n: number, visita?: Visita) => {
+    const handleDialogOpen = (n: number, attivo: boolean, visita?: Visita) => {
         setIsDialogOpen(true);
         setActiveCard(visita);
         typeModel = n;
-
+        mod_att = attivo;
     };
-
 
     const handleDialogClose = () => {
         setIsDialogOpen(false);
@@ -129,7 +130,7 @@ export const CardShow: React.FC<{ onOpenModal: (n: number, visita?: Visita) => v
                     <Box sx={style}>
                         {activeCard && (
 
-                            <Card visiteData={[activeCard]} onOpenModal={handleDialogOpen} typo={typeModel} />
+                            <Card visiteData={[activeCard]} onOpenModal={handleDialogOpen} typo={typeModel} attiva={mod_att} />
                         )}
                     </Box>
                 </Modal>

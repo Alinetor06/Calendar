@@ -7,6 +7,7 @@ interface FieldProps<T> {
     value: T;
     onChange: (value: T) => void;
     placeholder?: string; // Aggiungi questa riga
+    disabled: boolean
 }
 
 const priority_value = [
@@ -24,7 +25,7 @@ const priority_value = [
     }
 ];
 
-const GenericField = <T extends string | number | Date>({ label, value, onChange, placeholder }: FieldProps<T>) => {
+const GenericField = <T extends string | number | Date>({ label, value, onChange, placeholder, disabled }: FieldProps<T>) => {
     const [error, setError] = useState<string | undefined>(undefined);
     const [inputValue, setInputValue] = useState<string>('');
 
@@ -94,6 +95,7 @@ const GenericField = <T extends string | number | Date>({ label, value, onChange
                     value={value ?? ''} // Utilizza direttamente il valore fornito dalla prop
                     onChange={(e) => onChange(e.target.value as T)} // Aggiorna il valore selezionato
                     onBlur={handleInputBlur}
+                    disabled={disabled}
                 >
                     {priority_value.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
@@ -112,6 +114,7 @@ const GenericField = <T extends string | number | Date>({ label, value, onChange
                     onBlur={handleInputBlur}
                     error={!!error}
                     helperText={error}
+                    disabled={disabled}
                     placeholder={placeholder} // Aggiungi questa riga
                 />
             )}

@@ -11,8 +11,9 @@ import { Visita } from '../config/Visite';
 
 interface CardProps {
     visiteData: Visita[];
-    onOpenModal: (n: number, visita?: Visita) => void;
+    onOpenModal: (n: number, attivo: boolean, visita?: Visita) => void;
     typo: number
+    attiva?: boolean
 }
 
 const getDateOnly = (date: Date): string => {
@@ -23,7 +24,15 @@ const getDateOnly = (date: Date): string => {
 };
 
 
-const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo }) => {
+const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo, attiva }) => {
+
+    const [attivo, setAttivo] = useState(attiva); // Inizialmente disattivo
+
+    const handleToggleEdit = () => {
+        setAttivo(!attivo); // Inverte lo stato di attivo (attiva/disattiva modalità di modifica)
+        // Se desideri reimpostare eventuali valori del form ai valori iniziali quando disattivi la modalità di modifica,
+        // puoi aggiungere qui la logica per farlo.
+    };
 
     const today = new Date();
 
@@ -44,6 +53,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo }) 
         // Aggiorna lo stato con il nuovo array aggiornato
         setUpdatedVisite(updatedVisiteCopy);
     };
+
 
 
     /**
@@ -111,7 +121,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo }) 
                                         size="sm"
                                         variant="soft"
                                         color="primary"
-                                        onClick={() => onOpenModal(1, v)}
+                                        onClick={() => onOpenModal(1, false, v)}
                                     >
                                         Visualizza
                                     </Button>
@@ -121,7 +131,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo }) 
                                         variant="soft"
                                         color="warning"
                                         disabled={isPastDate} // Disabilita il bottone se la data è nel passato
-                                        onClick={() => onOpenModal(2, v)}
+                                        onClick={() => onOpenModal(1, true, v)}
                                     >
                                         Modifica
                                     </Button>
@@ -145,88 +155,34 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo }) 
     }
     if (typo === 1) {
         return (
-            <>
-                <Card sx={{ minWidth: 275 }}>
-                    {visiteData.map((v, index) => {
-                        const visitDate = new Date(v.date_visit);
-                        const isPastDate = visitDate < today;
-
-                        return (
-                            <React.Fragment key={index}>
-                                <CardContent>
-                                    <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
-                                        Visita: {visitDate.toDateString()}
-                                    </Typography>
-
-                                    <Typography sx={{ mb: 1.5, ml: 1 }} variant="h4" component="div">
-                                        Nome:<div className='card_info'>{v.name}</div>
-                                    </Typography>
-
-                                    <Typography sx={{ mb: 1.5, ml: 1 }} variant="h4" component="div">
-                                        Priorità: <div className='card_info'>   {v.priority} </div>
-                                    </Typography>
-
-
-                                    <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
-                                        Descrizione: <div className='card_info'> {v.description}</div>
-                                    </Typography>
-
-
-                                    <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
-                                        Età:   <div className='card_info'>{v.email}</div>
-                                    </Typography>
-
-                                    <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
-                                        Tel. :   <div className='card_info'> {v.tel}   </div>
-                                    </Typography>
-
-                                </CardContent>
-                                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-
-                                    <Button
-                                        size="sm"
-                                        variant="soft"
-                                        color="warning"
-                                        disabled={isPastDate} // Disabilita il bottone se la data è nel passato
-                                        onClick={() => onOpenModal(2, v)}
-                                    >
-                                        Modifica
-                                    </Button>
-
-                                    <Button
-                                        size="sm"
-                                        variant="soft"
-                                        color="danger"
-                                        disabled={isPastDate} // Disabilita il bottone se la data è nel passato
-                                    >
-                                        Elimina
-                                    </Button>
-                                </Box>
-                            </React.Fragment>
-                        );
-                    })}
-                </Card>
-
-            </>
-        );
-    }
-    if (typo === 2) {
-        return (
             <Card sx={{ minWidth: 275 }}>
                 {visiteData.map((v, index) => {
+                    const visitDate = new Date(v.date_visit);
+                    const isPastDate = visitDate < today;
 
                     return (
                         <React.Fragment key={index}>
                             <CardContent>
-                                <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
-                                    Modifica Visita:
-                                </Typography>
+                                {attivo ? (
+                                    <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
+                                        Modifica Visita:
+                                    </Typography>
+                                ) : (
+                                    <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
+                                        Visualizza Visita:
+                                    </Typography>
+                                )}
+
                                 <div className='edit_visit_Model'>
-                                    <div className='row_card_1'>
+                                    <Box component="form"
+                                        sx={{
+                                            '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                        }}>
                                         <GenericField
                                             label="Nome"
                                             value={v.name}
                                             onChange={(newValue) => handleFieldChange(index, 'name', newValue)}
+                                            disabled={!attivo}
                                         />
 
                                         <GenericField
@@ -234,27 +190,31 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo }) 
                                             value={v.email}
                                             onChange={(newValue) => handleFieldChange(index, 'email', newValue)}
                                             placeholder="es. abcdefghi@abcde.abc"
+                                            disabled={!attivo}
                                         />
 
                                         <GenericField
                                             label="Priorità"
                                             value={v.priority}
                                             onChange={(newValue) => handleFieldChange(index, 'priority', newValue)}
+                                            disabled={!attivo}
                                         />
-                                    </div>
-                                    <div className='row_card_2'>
+
+
 
                                         <GenericField
                                             label='Data della Visita'
                                             value={getDateOnly(v.date_visit)}
                                             onChange={(newValue) => handleFieldChange(index, 'date_visit', new Date(newValue))}
                                             placeholder="es. YYYY-MM-DD"
+                                            disabled={!attivo}
                                         />
 
                                         <GenericField
                                             label="Descrizione"
                                             value={v.description}
                                             onChange={(newValue) => handleFieldChange(index, 'description', newValue)}
+                                            disabled={!attivo}
                                         />
 
                                         <GenericField
@@ -262,34 +222,65 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo }) 
                                             value={v.tel}
                                             onChange={(newValue) => handleFieldChange(index, 'tel', newValue)}
                                             placeholder="es. +39 0123456789 "
+                                            disabled={!attivo}
                                         />
-                                    </div>
+
+                                    </Box>
                                 </div>
 
-                                {/* Altri campi del form */}
 
                             </CardContent>
                             <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                                <Button
-                                    size="sm"
-                                    variant="soft"
-                                    color="success"
-                                >
-                                    Salva
-                                </Button>
 
-                                <Button
-                                    size="sm"
-                                    variant="soft"
-                                    color="danger"
-                                >
-                                    Annulla
-                                </Button>
+                                {attivo ? (
+                                    <>
+                                        <Button
+                                            size="sm"
+                                            variant="soft"
+                                            color="success"
+                                        >
+                                            Salva
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="soft"
+                                            color="danger"
+                                            onClick={handleToggleEdit}
+                                        >
+                                            Annulla
+                                        </Button>
+
+                                    </>
+                                ) : (
+                                    <>
+                                        <Button
+                                            size="sm"
+                                            variant="soft"
+                                            color="primary"
+                                            onClick={handleToggleEdit} // Chiamata alla funzione onOpenModal passando l'indice
+                                            disabled={isPastDate} // Disabilita il bottone se la data è nel passato
+                                        >
+                                            Modifica
+                                        </Button>
+
+                                        <Button
+                                            size="sm"
+                                            variant="soft"
+                                            color="danger"
+                                            disabled={isPastDate} // Disabilita il bottone se la data è nel passato
+                                        >
+                                            Elimina
+                                        </Button>
+                                    </>
+                                )}
+
+
                             </Box>
                         </React.Fragment>
                     );
-                })}
-            </Card>
+                })
+                }
+            </Card >
         );
     }
     else {
