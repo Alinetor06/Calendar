@@ -1,9 +1,9 @@
 import React from "react";
-import { useState } from 'react';
+
 import Calendar from "./Calendar";
 import { IconButton, Box, Modal } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import Card from "../Card"
+
 
 //configurazioni
 import { Visita } from "../../config/Visite";
@@ -13,17 +13,6 @@ interface DataPickerProps {
 
 }
 
-const [isDialogOpen, setIsDialogOpen] = useState(false);
-const [activeCard, setActiveCard] = useState<Visita>();
-
-const handleDialogOpen = (n: number, visita?: Visita) => {
-    setIsDialogOpen(true);
-    setActiveCard(visita);
-};
-
-const handleDialogClose = () => {
-    setIsDialogOpen(false);
-}
 
 export const DataPicker: React.FC<DataPickerProps> = ({ onOpenModal }) => {
 
