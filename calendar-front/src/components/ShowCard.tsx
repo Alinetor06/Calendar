@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Visita } from '../config/Visite';
 import Slider from "./Slider"
-import { Modal, Box } from "@mui/material";
+import ModalComponent from "./ModalComponent";
 
 
 //components
@@ -19,34 +19,25 @@ const Slideprops = {
     page_transition: 500
 };
 
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
 
 
-
-export const CardShow: React.FC<{ onOpenModal: (n: number, attiva: boolean, visita?: Visita) => void }> = ({ onOpenModal }) => {
+export const CardShow: React.FC<{}> = ({ }) => {
     const [data, setData] = useState<Visita[]>([]);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeCard, setActiveCard] = useState<Visita>();
 
-    const handleDialogOpen = (n: number, attivo: boolean, visita?: Visita) => {
-        setIsDialogOpen(true);
+    const handleModalOpen = (n: number, attivo?: boolean, visita?: Visita) => {
+        setIsModalOpen(true);
         setActiveCard(visita);
         typeModel = n;
-        mod_att = attivo;
+        if (typeof attivo === 'boolean') {
+            mod_att = attivo;
+        }
+
     };
 
-    const handleDialogClose = () => {
-        setIsDialogOpen(false);
+    const handleModalClose = () => {
+        setIsModalOpen(false);
     }
 
 
@@ -125,20 +116,12 @@ export const CardShow: React.FC<{ onOpenModal: (n: number, attiva: boolean, visi
             <div className="background-card-container">
                 <h2 className='header-text-show'>Visite:</h2>
 
-
-                <Modal onClose={handleDialogClose} open={isDialogOpen} >
-                    <Box sx={style}>
-                        {activeCard && (
-
-                            <Card visiteData={[activeCard]} onOpenModal={handleDialogOpen} typo={typeModel} attiva={mod_att} />
-                        )}
-                    </Box>
-                </Modal>
+                <ModalComponent isOpen={isModalOpen} onClose={handleModalClose} activeCard={activeCard} typeModel={typeModel} attivo={mod_att} />
 
                 <>
                     <Slider {...Slideprops}>
                         {dati.map((visita, index) => (
-                            <Card key={index} visiteData={[visita]} onOpenModal={handleDialogOpen} typo={0} />
+                            <Card key={index} visiteData={[visita]} onOpenModal={handleModalOpen} typo={0} />
                         ))}
                     </Slider>
 

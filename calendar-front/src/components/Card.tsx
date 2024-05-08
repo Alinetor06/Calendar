@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Card, CardContent, Typography, TextField } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 import { Box, Button } from '@mui/joy';
 import { useState } from 'react';
 import GenericField from './GenericField';
+
 
 //configurazioni
 import { Visita } from '../config/Visite';
@@ -11,7 +12,7 @@ import { Visita } from '../config/Visite';
 
 interface CardProps {
     visiteData: Visita[];
-    onOpenModal: (n: number, attivo: boolean, visita?: Visita) => void;
+    onOpenModal: (n: number, attiva?: boolean, visita?: Visita) => void;
     typo: number
     attiva?: boolean
 }
@@ -290,7 +291,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo, at
                     <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
                         Creazione Visita:
                     </Typography>
-                    <div className='edit_visit_Model'>
+                    <div className='save_visit_Model'>
                         <Box component="form"
                             sx={{
                                 '& .MuiTextField-root': { m: 1, width: '25ch' },

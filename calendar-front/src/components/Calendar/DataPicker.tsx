@@ -1,20 +1,14 @@
 import React from "react";
 
 import Calendar from "./Calendar";
-import { IconButton, Box, Modal } from '@mui/material';
+import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 
-//configurazioni
-import { Visita } from "../../config/Visite";
-
-interface DataPickerProps {
-    onOpenModal: (n: number, visita?: Visita) => void;
-
-}
 
 
-export const DataPicker: React.FC<DataPickerProps> = ({ onOpenModal }) => {
+
+export const DataPicker: React.FC<{}> = ({ }) => {
 
 
 
@@ -26,7 +20,7 @@ export const DataPicker: React.FC<DataPickerProps> = ({ onOpenModal }) => {
                 <div className="calendar_display">
 
                     <Calendar />
-                    <IconButton onClick={() => onOpenModal(3)}>
+                    <IconButton>
                         <AddIcon />
                     </IconButton>
                 </div>
