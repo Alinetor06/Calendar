@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Visita } from '../config/Visite';
 import Slider from "./Slider"
 import ModalComponent from "./ModalComponent";
+import VisitCard from "./TypoCard/SliderCard";
 
 
 //components
-import Card from "./Card";
+import Card from "./TypoCard/View_Edit_Save_Cards";
 
 
 let typeModel: number = 0;
@@ -22,7 +23,10 @@ const Slideprops = {
 
 
 export const CardShow: React.FC<{}> = ({ }) => {
-    const [data, setData] = useState<Visita[]>([]);
+
+
+    const today = new Date();
+    // const [data, setData] = useState<Visita[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeCard, setActiveCard] = useState<Visita>();
 
@@ -121,7 +125,7 @@ export const CardShow: React.FC<{}> = ({ }) => {
                 <>
                     <Slider {...Slideprops}>
                         {dati.map((visita, index) => (
-                            <Card key={index} visiteData={[visita]} onOpenModal={handleModalOpen} typo={0} />
+                            <VisitCard key={index} visit={visita} onOpenModal={handleModalOpen} isPastDate={visita.date_visit < today} />
                         ))}
                     </Slider>
 

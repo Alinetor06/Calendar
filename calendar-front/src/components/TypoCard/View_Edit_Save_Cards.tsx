@@ -2,17 +2,16 @@ import * as React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 import { Box, Button } from '@mui/joy';
 import { useState } from 'react';
-import GenericField from './GenericField';
+import GenericField from '../GenericField';
 
 
 //configurazioni
-import { Visita } from '../config/Visite';
+import { Visita } from '../../config/Visite';
 
 
 
 interface CardProps {
     visiteData: Visita[];
-    onOpenModal: (n: number, attiva?: boolean, visita?: Visita) => void;
     typo: number
     attiva?: boolean
 }
@@ -25,7 +24,15 @@ const getDateOnly = (date: Date): string => {
 };
 
 
-const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo, attiva }) => {
+const ListStackRatio: React.FC<CardProps> = ({ visiteData, typo, attiva }) => {
+
+
+    /**
+     * 
+     * UPDATE VISITE
+     * 
+     */
+
 
     const [attivo, setAttivo] = useState(attiva); // Inizialmente disattivo
 
@@ -37,11 +44,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo, at
 
     const today = new Date();
 
-    /**
-     * 
-     * UPDATE VISITE
-     * 
-     */
+
 
     const [updatedVisite, setUpdatedVisite] = useState(visiteData);
 
@@ -95,66 +98,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo, at
     };
 
 
-
     if (typo === 0) {
-        return (
-            <>
-                <Card sx={{ minWidth: 275 }}>
-                    {visiteData.map((v, index) => {
-                        const visitDate = new Date(v.date_visit);
-                        const isPastDate = visitDate < today;
-
-                        return (
-                            <React.Fragment key={index}>
-                                <CardContent>
-                                    <Typography variant="h5" component="div">
-                                        {v.name}
-                                    </Typography>
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        {v.description}
-                                    </Typography>
-                                    <Typography variant="h5" component="div">
-                                        {v.priority}
-                                    </Typography>
-                                </CardContent>
-                                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                                    <Button
-                                        size="sm"
-                                        variant="soft"
-                                        color="primary"
-                                        onClick={() => onOpenModal(1, false, v)}
-                                    >
-                                        Visualizza
-                                    </Button>
-
-                                    <Button
-                                        size="sm"
-                                        variant="soft"
-                                        color="warning"
-                                        disabled={isPastDate} // Disabilita il bottone se la data è nel passato
-                                        onClick={() => onOpenModal(1, true, v)}
-                                    >
-                                        Modifica
-                                    </Button>
-
-                                    <Button
-                                        size="sm"
-                                        variant="soft"
-                                        color="danger"
-                                        disabled={isPastDate} // Disabilita il bottone se la data è nel passato
-                                    >
-                                        Elimina
-                                    </Button>
-                                </Box>
-                            </React.Fragment>
-                        );
-                    })}
-                </Card>
-
-            </>
-        );
-    }
-    if (typo === 1) {
         return (
             <Card sx={{ minWidth: 275 }}>
                 {visiteData.map((v, index) => {
@@ -236,6 +180,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo, at
                                 {attivo ? (
                                     <>
                                         <Button
+                                            id='ButtonSave'
                                             size="sm"
                                             variant="soft"
                                             color="success"
@@ -243,6 +188,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo, at
                                             Salva
                                         </Button>
                                         <Button
+                                            id='ButtonBack'
                                             size="sm"
                                             variant="soft"
                                             color="danger"
@@ -255,6 +201,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo, at
                                 ) : (
                                     <>
                                         <Button
+                                            id='ButtonEdit'
                                             size="sm"
                                             variant="soft"
                                             color="primary"
@@ -265,6 +212,7 @@ const ListStackRatio: React.FC<CardProps> = ({ visiteData, onOpenModal, typo, at
                                         </Button>
 
                                         <Button
+                                            id='ButtonDelite'
                                             size="sm"
                                             variant="soft"
                                             color="danger"

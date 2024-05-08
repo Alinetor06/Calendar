@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Modal, Box } from "@mui/material";
 
 //config
 import { Visita } from '../config/Visite';
 
 //components
-import Card from "./Card";
+import Card from "./TypoCard/View_Edit_Save_Cards";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -21,12 +21,20 @@ const style = {
 
 const ModalComponent: React.FC<{ isOpen: boolean, onClose: () => void, activeCard?: Visita, typeModel: number, attivo?: boolean }> = ({ isOpen, onClose, activeCard, typeModel, attivo }) => {
     let mod_att: boolean = attivo || false;
+
+    let cardComponent;
+    if (activeCard && typeModel === 2) {
+        cardComponent = <Card visiteData={[activeCard]} typo={typeModel} />;
+
+    } else if (activeCard) {
+        // Altrimenti, assegna il componente per il formato predefinito della card
+        cardComponent = <Card visiteData={[activeCard]} typo={typeModel} attiva={mod_att} />;
+    }
+
     return (
         <Modal onClose={onClose} open={isOpen}>
             <Box sx={style}>
-                {activeCard && (
-                    <Card visiteData={[activeCard]} onOpenModal={() => { }} typo={typeModel} attiva={mod_att} />
-                )}
+                {activeCard && cardComponent}
             </Box>
         </Modal>
     );
