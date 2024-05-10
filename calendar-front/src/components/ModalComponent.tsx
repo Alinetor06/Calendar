@@ -6,6 +6,8 @@ import { Visita } from '../config/Visite';
 
 //components
 import Card from "./TypoCard/View_Edit_Save_Cards";
+import Card2 from "./TypoCard/Save_Visit_Card"
+
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -19,16 +21,25 @@ const style = {
     p: 4,
 };
 
-const ModalComponent: React.FC<{ isOpen: boolean, onClose: () => void, activeCard?: Visita, typeModel: number, attivo?: boolean }> = ({ isOpen, onClose, activeCard, typeModel, attivo }) => {
+interface ModalProps {
+    isOpen: boolean,
+    onClose: () => void,
+    data?: Visita[],
+    activeCard?: Visita,
+    typeModel: number,
+    attivo?: boolean
+}
+
+const ModalComponent: React.FC<ModalProps> = ({ isOpen, onClose, data, activeCard, typeModel, attivo }) => {
     let mod_att: boolean = attivo || false;
 
     let cardComponent;
-    if (activeCard && typeModel === 2) {
-        cardComponent = <Card visiteData={[activeCard]} typo={typeModel} />;
+    if (data && typeModel === 1) {
+        cardComponent = <Card2 visiteData={data} />;
 
-    } else if (activeCard) {
+    } else if (activeCard && typeModel === 0) {
         // Altrimenti, assegna il componente per il formato predefinito della card
-        cardComponent = <Card visiteData={[activeCard]} typo={typeModel} attiva={mod_att} />;
+        cardComponent = <Card visiteData={[activeCard]} attiva={mod_att} />;
     }
 
     return (

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Visita } from '../config/Visite';
 import Slider from "./Slider"
 import ModalComponent from "./ModalComponent";
-import VisitCard from "./TypoCard/SliderCard";
+
 
 
 //components
-import Card from "./TypoCard/View_Edit_Save_Cards";
+import VisitCard from "./TypoCard/Slider_Card";
 
 
 let typeModel: number = 0;
@@ -22,7 +22,7 @@ const Slideprops = {
 
 
 
-export const CardShow: React.FC<{}> = ({ }) => {
+export const CardSlider: React.FC<{}> = ({ }) => {
 
 
     const today = new Date();
@@ -120,7 +120,7 @@ export const CardShow: React.FC<{}> = ({ }) => {
             <div className="background-card-container">
                 <h2 className='header-text-show'>Visite:</h2>
 
-                <ModalComponent isOpen={isModalOpen} onClose={handleModalClose} activeCard={activeCard} typeModel={typeModel} attivo={mod_att} />
+                <ModalComponent isOpen={isModalOpen} onClose={handleModalClose} activeCard={activeCard} typeModel={0} attivo={mod_att} />
 
                 <>
                     <Slider {...Slideprops}>

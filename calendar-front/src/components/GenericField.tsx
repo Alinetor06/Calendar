@@ -33,7 +33,7 @@ const GenericField = <T extends string | number | Date>({ label, value, onChange
         setInputValue(value?.toString() ?? ''); // Update inputValue when value changes
     }, [value]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setInputValue(e.target.value);
     };
 
@@ -110,7 +110,7 @@ const GenericField = <T extends string | number | Date>({ label, value, onChange
                     label={label}
                     variant="standard"
                     value={inputValue}
-                    onChange={handleInputChange}
+                    onChange={(e) => handleInputChange(e)}
                     onBlur={handleInputBlur}
                     error={!!error}
                     helperText={error}

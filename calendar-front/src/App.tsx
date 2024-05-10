@@ -1,6 +1,6 @@
 import './css/App.css';
 import { DataPicker } from './components/Calendar/DataPicker'
-import { CardShow } from './components/ShowCard'
+import { CardSlider } from './components/ShowSlideCard'
 
 
 
@@ -11,7 +11,7 @@ function App() {
     <div className='App'>
       <div className="background-container">
         <DataPicker />
-        <CardShow />
+        <CardSlider />
       </div>
     </div>
   );
