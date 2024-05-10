@@ -35,20 +35,32 @@ const ModalComponent: React.FC<ModalProps> = ({ isOpen, onClose, data, activeCar
 
     let cardComponent;
     if (data && typeModel === 1) {
-        cardComponent = <Card2 visiteData={data} />;
+        console.log("Data is defined and typeModel is 1:", data); // Aggiunto questo log per verificare i dati
+        cardComponent = <Card2 />;
+
+        return (
+            <Modal onClose={onClose} open={isOpen}>
+                <Box sx={style}>
+                    {data && cardComponent}
+                </Box>
+            </Modal>
+        );
 
     } else if (activeCard && typeModel === 0) {
+        console.log("Data is defined and typeModel is 0:", activeCard);
         // Altrimenti, assegna il componente per il formato predefinito della card
         cardComponent = <Card visiteData={[activeCard]} attiva={mod_att} />;
+
+        return (
+            <Modal onClose={onClose} open={isOpen}>
+                <Box sx={style}>
+                    {activeCard && cardComponent}
+                </Box>
+            </Modal>
+        );
     }
 
-    return (
-        <Modal onClose={onClose} open={isOpen}>
-            <Box sx={style}>
-                {activeCard && cardComponent}
-            </Box>
-        </Modal>
-    );
+
 };
 
 export default ModalComponent;

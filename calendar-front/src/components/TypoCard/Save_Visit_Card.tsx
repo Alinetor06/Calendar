@@ -4,30 +4,18 @@ import { Box, Button } from '@mui/joy';
 import { useState } from 'react';
 import GenericField from '../GenericField';
 
-
-//configurazioni
+// Interfaccia per il tipo Visita
 import { Visita } from '../../config/Visite';
-
-
 
 const getDateOnly = (date: Date): string => {
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // aggiunge lo zero iniziale se necessario
-    const day = date.getDate().toString().padStart(2, '0'); // aggiunge lo zero iniziale se necessario
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
 };
 
 
-/**
-* 
-* SAVE VISITE
-* 
-*/
-
-const Save_Visit_Card: React.FC<{ visiteData: Visita[] }> = ({ visiteData }) => {
-
-    const [visite, setVisite] = useState(visiteData);
-
+const Save_Visit_Card: React.FC = () => {
     const [newVisit, setNewVisit] = useState<Visita>({
         id: 0,
         name: '',
@@ -38,11 +26,20 @@ const Save_Visit_Card: React.FC<{ visiteData: Visita[] }> = ({ visiteData }) => 
         tel: ''
     });
 
+    const handleFieldChange = <T extends keyof Visita>(field: T, value: Visita[T]) => {
+        // Crea una copia della nuova visita
+        const newVisitCopy = { ...newVisit };
+        // Aggiorna il campo specificato della nuova visita con il nuovo valore
+        newVisitCopy[field] = value;
+        // Aggiorna lo stato con la nuova visita aggiornata
+        setNewVisit(newVisitCopy);
+    };
 
     const handleSaveNewVisit = () => {
-        // Aggiungi la nuova visita all'array visite
-        setVisite([...visite, newVisit]);
-        // Resettare lo stato per prepararsi alla creazione di una nuova visita
+        // Qui puoi fare ciò che desideri con la nuova visita salvata
+        console.log('Nuova visita salvata:', newVisit);
+        // Aggiungi la logica per salvare la nuova visita, ad esempio inviare i dati al server, ecc.
+        // Resetta il form dopo aver salvato la visita
         setNewVisit({
             id: 0,
             name: '',
@@ -51,20 +48,8 @@ const Save_Visit_Card: React.FC<{ visiteData: Visita[] }> = ({ visiteData }) => 
             date_visit: new Date(),
             description: '',
             tel: ''
-            // Rimuovi il carattere / in eccesso
         });
     };
-
-    /** 
-        const handleFieldChange = <T extends keyof typeof updatedVisite[0]>(index: number, field: T, value: typeof updatedVisite[0][T]) => {
-            // Clona l'array updatedVisite per modificare solo l'elemento specifico
-            const updatedVisiteCopy = [...updatedVisite];
-            // Aggiorna il campo specificato dell'elemento specificato con il nuovo valore
-            updatedVisiteCopy[index][field] = value;
-            // Aggiorna lo stato con il nuovo array aggiornato
-            setUpdatedVisite(updatedVisiteCopy);
-        };
-    */
 
     return (
         <Card sx={{ minWidth: 275 }}>
@@ -77,45 +62,49 @@ const Save_Visit_Card: React.FC<{ visiteData: Visita[] }> = ({ visiteData }) => 
                         sx={{
                             '& .MuiTextField-root': { m: 1, width: '25ch' },
                         }}>
+
                         <GenericField
                             label="Nome"
-                            value={newVisit.name}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewVisit({ ...newVisit, name: e.target.value })}
+                            value={newVisit.email}
+                            onChange={(newValue) => handleFieldChange('name', newValue)}
+                            placeholder="es. abcdefghi@abcde.abc"
                         />
 
                         <GenericField
                             label="Email"
                             value={newVisit.email}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewVisit({ ...newVisit, email: e.target.value })}
+                            onChange={(newValue) => handleFieldChange('email', newValue)}
                             placeholder="es. abcdefghi@abcde.abc"
                         />
 
                         <GenericField
                             label="Priorità"
                             value={newVisit.priority}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewVisit({ ...newVisit, priority: parseInt(e.target.value) })}
+                            onChange={(newValue) => handleFieldChange('priority', newValue)}
                         />
+
+
 
                         <GenericField
                             label='Data della Visita'
                             value={getDateOnly(newVisit.date_visit)}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewVisit({ ...newVisit, date_visit: new Date(e.target.value) })}
+                            onChange={(newValue) => handleFieldChange('date_visit', new Date(newValue))}
                             placeholder="es. YYYY-MM-DD"
                         />
 
                         <GenericField
                             label="Descrizione"
                             value={newVisit.description}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewVisit({ ...newVisit, description: e.target.value })}
+                            onChange={(newValue) => handleFieldChange('description', newValue)}
                         />
 
                         <GenericField
                             label="Telefono"
                             value={newVisit.tel}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewVisit({ ...newVisit, tel: e.target.value })}
-                            placeholder="es. +39 0123456789"
-                        />
+                            onChange={(newValue) => handleFieldChange('tel', newValue)}
+                            placeholder="es. +39 0123456789 "
 
+                        />
                     </Box>
                 </div>
 
@@ -124,7 +113,7 @@ const Save_Visit_Card: React.FC<{ visiteData: Visita[] }> = ({ visiteData }) => 
                         size="sm"
                         variant="soft"
                         color="success"
-                        onClick={handleSaveNewVisit} // Funzione per salvare la nuova visita
+                        onClick={handleSaveNewVisit}
                     >
                         Salva
                     </Button>
