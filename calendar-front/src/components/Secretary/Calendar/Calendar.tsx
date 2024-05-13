@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import DataPicker from "./DataPicker";
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import ModalComponent from "../ModalComponent";
+import ModalComponent from "../ShowCard/ModalComponent";
 import { Visita } from "../../../config/Visite";
 
 

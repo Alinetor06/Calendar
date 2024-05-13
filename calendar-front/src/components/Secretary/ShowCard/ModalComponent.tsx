@@ -2,11 +2,11 @@ import React from "react";
 import { Modal, Box } from "@mui/material";
 
 //config
-import { Visita } from '../../config/Visite';
+import { Visita } from '../../../config/Visite';
 
 //components
-import Card from "./TypoCard/View_Edit_Save_Cards";
-import Card2 from "./TypoCard/Save_Visit_Card"
+import Card from "../TypoCard/View_Edit_Save_Cards";
+import Card2 from "../TypoCard/Save_Visit_Card"
 
 
 const style = {

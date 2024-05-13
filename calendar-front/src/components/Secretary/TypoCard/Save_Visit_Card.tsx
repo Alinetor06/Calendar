@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 import { Box, Button } from '@mui/joy';
 import { useState } from 'react';
-import GenericField from '../GenericField';
+import GenericField from './GenericField';
 import { Visita } from '../../../config/Visite';
 
 const getDateOnly = (date: Date): string => {

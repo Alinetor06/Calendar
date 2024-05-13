@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Visita } from '../../config/Visite';
-import Slider from "./Slider"
+import { Visita } from '../../../config/Visite';
+import Slider from "../Slider"
 import ModalComponent from "./ModalComponent";
 
 
 
 //components
-import VisitCard from "./TypoCard/Slider_Card";
+import VisitCard from "../TypoCard/Slider_Card";
 
 
 let typeModel: number = 0;
