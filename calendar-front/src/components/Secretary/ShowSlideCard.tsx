@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Visita } from '../config/Visite';
+import { Visita } from '../../config/Visite';
 import Slider from "./Slider"
 import ModalComponent from "./ModalComponent";
 
@@ -46,15 +46,17 @@ export const CardSlider: React.FC<{}> = ({ }) => {
 
 
 
-    /**useEffect(() => {
-        const getData = async () => {
-            const data = await (
-                await fetch('')
-            ).json();
-            setData(data);
-        };
-        getData();
-    }, []) */
+    /**
+     * useEffect(() => {
+        useEffect(() => {
+        getData().then((data: Visita[]) => {
+            // Fai qualcosa con i dati ottenuti, ad esempio:
+            console.log("Dati ottenuti:", data);
+        }).catch(error => {
+            console.error("Errore durante il recupero dei dati:", error);
+        });
+    }, []);
+    */
 
     const dati: Visita[] = [
         {

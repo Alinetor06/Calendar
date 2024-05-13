@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, Box } from "@mui/material";
 
 //config
-import { Visita } from '../config/Visite';
+import { Visita } from '../../config/Visite';
 
 //components
 import Card from "./TypoCard/View_Edit_Save_Cards";
@@ -24,24 +24,23 @@ const style = {
 interface ModalProps {
     isOpen: boolean,
     onClose: () => void,
-    data?: Visita[],
     activeCard?: Visita,
     typeModel: number,
     attivo?: boolean
 }
 
-const ModalComponent: React.FC<ModalProps> = ({ isOpen, onClose, data, activeCard, typeModel, attivo }) => {
+const ModalComponent: React.FC<ModalProps> = ({ isOpen, onClose, activeCard, typeModel, attivo }) => {
     let mod_att: boolean = attivo || false;
 
     let cardComponent;
-    if (data && typeModel === 1) {
-        console.log("Data is defined and typeModel is 1:", data); // Aggiunto questo log per verificare i dati
+    if (typeModel === 1) {
+
         cardComponent = <Card2 />;
 
         return (
             <Modal onClose={onClose} open={isOpen}>
                 <Box sx={style}>
-                    {data && cardComponent}
+                    {cardComponent}
                 </Box>
             </Modal>
         );

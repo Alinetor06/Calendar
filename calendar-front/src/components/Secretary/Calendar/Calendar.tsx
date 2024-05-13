@@ -1,22 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import Calendar from "./Calendar";
+import DataPicker from "./DataPicker";
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ModalComponent from "../ModalComponent";
-import { Visita } from "../../config/Visite";
+import { Visita } from "../../../config/Visite";
 
 
 
 
-export const DataPicker: React.FC<{}> = ({ }) => {
+export const Calendar: React.FC<{}> = ({ }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dati, setDati] = useState<Visita[]>([]);
 
-    const handleModalOpen = () => {
-        setIsModalOpen(true);
-
+    useEffect(() => {
         setDati([
             {
                 id: 1,
@@ -74,7 +72,12 @@ export const DataPicker: React.FC<{}> = ({ }) => {
                 tel: '+39323253252'
             },
 
-        ]);
+        ])
+    }, []);
+
+    const handleModalOpen = () => {
+        setIsModalOpen(true);
+
     };
 
     const handleModalClose = () => {
@@ -86,16 +89,17 @@ export const DataPicker: React.FC<{}> = ({ }) => {
 
     return (
         <div className="background-calendar-container">
-            <h1 className='header-text-calendar'>Calendar </h1>
             <>
                 <div className="calendar_display">
-                    <Calendar />
+
+                    <DataPicker highlightedDates={dati.map(visita => visita.date_visit)} />
+
                     <IconButton onClick={handleModalOpen}>
                         <AddIcon />
                     </IconButton>
 
                     {isModalOpen && (
-                        <ModalComponent isOpen={isModalOpen} onClose={handleModalClose} data={dati} typeModel={1} />
+                        <ModalComponent isOpen={isModalOpen} onClose={handleModalClose} typeModel={1} />
                     )}
                 </div>
 

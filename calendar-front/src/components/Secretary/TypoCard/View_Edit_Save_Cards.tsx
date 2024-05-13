@@ -6,7 +6,7 @@ import GenericField from '../GenericField';
 
 
 //configurazioni
-import { Visita } from '../../config/Visite';
+import { Visita } from '../../../config/Visite';
 
 
 

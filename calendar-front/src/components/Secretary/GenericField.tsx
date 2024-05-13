@@ -8,7 +8,9 @@ interface FieldProps<T> {
     onChange: (value: T) => void;
     placeholder?: string; // Aggiungi questa riga
     disabled?: boolean
+    error?: string
 }
+
 
 const priority_value = [
     {
@@ -26,6 +28,8 @@ const priority_value = [
 ];
 
 const GenericField = <T extends string | number | Date>({ label, value, onChange, placeholder, disabled }: FieldProps<T>) => {
+
+
     const [error, setError] = useState<string | undefined>(undefined);
     const [inputValue, setInputValue] = useState<string>('');
 
@@ -47,11 +51,15 @@ const GenericField = <T extends string | number | Date>({ label, value, onChange
                 return;
             }
 
-            // Controllo se il valore inserito è una data precedente a quella odierna
-            if (parsedDate < new Date()) {
-                setError('La data non può essere precedente a quella odierna');
+            const today = new Date();
+            today.setDate(today.getDate() - 1); // Imposta la data al giorno precedente
+
+            // Controllo se il valore inserito è una data uguale o precedente a quella del giorno precedente
+            if (parsedDate <= today) {
+                setError('La data non può essere precedente alla data del giorno odierno');
                 return;
             }
+
             newValue = parsedDate as T;
 
         } else if (typeof value === 'string') {
