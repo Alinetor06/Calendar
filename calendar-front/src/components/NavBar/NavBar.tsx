@@ -1,21 +1,27 @@
-// Navbar.tsx
-// Navbar.tsx
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './navbar.css'
 
-const Navbar: React.FC<{}> = () => {
-    const [isLogin, setIsLogin] = useState(false);
+
+interface NavbarProps {
+    auth: boolean
+    setAuth: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Navbar: React.FC<NavbarProps> = ({ auth, setAuth }) => {
+
+    let navigate = useNavigate();
 
     const handleLogout = () => {
         // Aggiungi qui la logica per eseguire il logout
-        setIsLogin(false); // Imposta lo stato di login su false
+        setAuth(false); // Imposta lo stato di login su false
+        navigate('/');
         // Esegui altre azioni necessarie per il logout, come cancellare i dati dell'utente dalla sessione, ecc.
     };
 
-    const handleToggleEdit = () => {
-        setIsLogin(true);
-    };
+
 
     return (
         <nav>
@@ -24,13 +30,13 @@ const Navbar: React.FC<{}> = () => {
                     <Link to="/">Home</Link>
                 </li>
                 <li>
-                    {!isLogin ? (
+                    {!auth ? (
                         <Link to="/SignIn">Sign In</Link>
                     ) : (
                         <Link to="/CalendarSecretary">Calendario</Link>
                     )}
                 </li>
-                {isLogin && (
+                {auth && (
                     <React.Fragment>
                         <li>
                             <Link to="/SearchSecretary">Cerca Visita</Link>

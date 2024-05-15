@@ -4,7 +4,7 @@ import { MenuItem } from '@mui/material';
 
 interface FieldProps<T> {
     label: string;
-    value: T;
+    value?: T;
     onChange: (value: T) => void;
     placeholder?: string; // Aggiungi questa riga
     disabled?: boolean
@@ -100,8 +100,8 @@ const GenericField = <T extends string | number | Date>({ label, value, onChange
                     sx={{ mb: 1.5, ml: 1 }}
                     select
                     label={label}
-                    value={value ?? ''} // Utilizza direttamente il valore fornito dalla prop
-                    onChange={(e) => onChange(e.target.value as T)} // Aggiorna il valore selezionato
+                    value={value ?? ''} // Usa il valore passato
+                    onChange={(e) => onChange(e.target.value as T)} // Usa la funzione di cambio passata
                     onBlur={handleInputBlur}
                     disabled={disabled}
                 >
@@ -117,13 +117,13 @@ const GenericField = <T extends string | number | Date>({ label, value, onChange
                     id={label}
                     label={label}
                     variant="standard"
-                    value={inputValue}
+                    value={inputValue} // Usa il valore dell'input
                     onChange={(e) => handleInputChange(e)}
                     onBlur={handleInputBlur}
                     error={!!error}
                     helperText={error}
                     disabled={disabled}
-                    placeholder={placeholder} // Aggiungi questa riga
+                    placeholder={placeholder}
                 />
             )}
         </>

@@ -20,6 +20,13 @@
 
 }
 
+.button-box {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  flex-wrap: wrap;
+}
+
 .calendar_display {
   display: flex;
   flex-direction: row;

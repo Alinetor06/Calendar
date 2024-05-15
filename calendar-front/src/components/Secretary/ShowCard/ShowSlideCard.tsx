@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Visita } from '../../../config/Visite';
 import Slider from "../Slider"
 import ModalComponent from "./ModalComponent";
@@ -20,9 +20,12 @@ const Slideprops = {
     page_transition: 500
 };
 
+interface CardSilderProps {
+    data: Visita[]
+}
 
 
-export const CardSlider: React.FC<{}> = ({ }) => {
+export const CardSlider: React.FC<CardSilderProps> = ({ data }) => {
 
 
     const today = new Date();
@@ -45,78 +48,6 @@ export const CardSlider: React.FC<{}> = ({ }) => {
     }
 
 
-
-    /**
-     * useEffect(() => {
-        useEffect(() => {
-        getData().then((data: Visita[]) => {
-            // Fai qualcosa con i dati ottenuti, ad esempio:
-            console.log("Dati ottenuti:", data);
-        }).catch(error => {
-            console.error("Errore durante il recupero dei dati:", error);
-        });
-    }, []);
-    */
-
-    const dati: Visita[] = [
-        {
-            id: 1,
-            name: 'Night view',
-            description: '4.21M views',
-            priority: 1,
-            date_visit: new Date('2024-05-30'),
-            email: 'adkmvoadvokm@gmail.com',
-            tel: '+39323253252'
-
-        },
-        {
-            id: 2,
-            name: 'Lake view',
-            description: '4.74M views',
-            priority: 1,
-            date_visit: new Date('2024-05-12'),
-            email: 'adkmvoadvokm@gmail.com',
-            tel: '+39323253252'
-        },
-        {
-            id: 3,
-            name: 'Mountain view',
-            description: '3.98M views',
-            priority: 1,
-            date_visit: new Date('2024-04-03'),
-            email: 'adkmvoadvokm@gmail.com',
-            tel: '+39323253252'
-        },
-        {
-            id: 4,
-            name: 'Mountain view',
-            description: '3.98M views',
-            priority: 1,
-            date_visit: new Date('2024-02-03'),
-            email: 'adkmvoadvokm@gmail.com',
-            tel: '+39323253252'
-        },
-        {
-            id: 5,
-            name: 'Mountain view',
-            description: '3.98M views',
-            priority: 1,
-            date_visit: new Date('2024-05-01'),
-            email: 'adkmvoadvokm@gmail.com',
-            tel: '+39323253252'
-        },
-        {
-            id: 6,
-            name: 'Mountain view',
-            description: '3.98M views',
-            priority: 1,
-            date_visit: new Date('2024-05-05'),
-            email: 'adkmvoadvokm@gmail.com',
-            tel: '+39323253252'
-        },
-
-    ];
-
     return (
         <>
             <div className="background-card-container">
@@ -126,7 +57,7 @@ export const CardSlider: React.FC<{}> = ({ }) => {
 
                 <>
                     <Slider {...Slideprops}>
-                        {dati.map((visita, index) => (
+                        {data.map((visita, index) => (
                             <VisitCard key={index} visit={visita} onOpenModal={handleModalOpen} isPastDate={visita.date_visit < today} />
                         ))}
                     </Slider>

@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { Card, CardContent, Typography } from '@mui/material';
-import { Box, Button } from '@mui/joy';
+import { Card, CardContent, Typography, Box, Button, TextField, MenuItem } from '@mui/material';
 import { useState } from 'react';
-import GenericField from './GenericField';
-
+import PhoneField from './PhoneField';
+import dayjs from 'dayjs';
+import { LocalizationProvider, DateField } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 //configurazioni
 import { Visita } from '../../../config/Visite';
+
 
 
 
@@ -15,22 +17,32 @@ interface CardProps {
     attiva?: boolean
 }
 
-const getDateOnly = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // aggiunge lo zero iniziale se necessario
-    const day = date.getDate().toString().padStart(2, '0'); // aggiunge lo zero iniziale se necessario
-    return `${year}-${month}-${day}`;
-};
+
+const priority_value = [
+    {
+        value: 0,
+        label: 'GREEN'
+    },
+    {
+        value: 1,
+        label: 'ORANGE'
+    },
+    {
+        value: 2,
+        label: 'RED'
+    }
+];
 
 
 const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
-
-
     /**
-     * 
-     * UPDATE VISITE
-     * 
-     */
+       * 
+       * UPDATE VISITE
+       * 
+       */
+
+
+
 
 
     const [attivo, setAttivo] = useState(attiva); // Inizialmente disattivo
@@ -47,148 +59,199 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
 
     const [updatedVisite, setUpdatedVisite] = useState(visiteData);
 
-    // Funzione per gestire la modifica della data di visita
-    const handleFieldChange = <T extends keyof typeof updatedVisite[0]>(index: number, field: T, value: typeof updatedVisite[0][T]) => {
-        // Clona l'array updatedVisite per modificare solo l'elemento specifico
-        const updatedVisiteCopy = [...updatedVisite];
-        // Aggiorna il campo specificato dell'elemento specificato con il nuovo valore
-        updatedVisiteCopy[index][field] = value;
-        // Aggiorna lo stato con il nuovo array aggiornato
-        setUpdatedVisite(updatedVisiteCopy);
-    };
 
+    function handleSaveNewVisit(event: React.FormEvent<HTMLFormElement>, visitId: number): void {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+
+        // Estrai i valori dal FormData
+        const name = data.get('name') as string;
+        const email = data.get('email') as string;
+        const date = data.get('date') as string; // Assicurati che l'id sia 'date' e non 'date_visit'
+        const priority = data.get('priority') as string;
+        const description = data.get('description') as string;
+        const tel = data.get('tel') as string;
+
+        // Aggiorna lo stato newVisit con i nuovi valori
+        setUpdatedVisite(prevState => {
+            const updatedVisiteCopy = [...prevState];
+            const visitIndex = updatedVisiteCopy.findIndex(visit => visit.id === visitId);
+            if (visitIndex !== -1) {
+                updatedVisiteCopy[visitIndex] = {
+                    ...updatedVisiteCopy[visitIndex],
+                    name: name,
+                    email: email,
+                    priority: parseInt(priority), // Assicurati che priority sia un numero
+                    date_visit: new Date(date), // Assicurati che la data venga parsata correttamente
+                    description: description,
+                    tel: tel // Non c'è un campo 'tel' nel FormData, quindi lo lascio vuoto
+                };
+            }
+            return updatedVisiteCopy;
+        });
+    }
+
+    console.log(updatedVisite)
 
     return (
-        <Card sx={{ minWidth: 275 }}>
-            {visiteData.map((v, index) => {
-                const visitDate = new Date(v.date_visit);
-                const isPastDate = visitDate < today;
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Card sx={{ minWidth: 275 }}>
+                {visiteData.map((v, index) => {
+                    const visitDate = new Date(v.date_visit);
+                    const isPastDate = visitDate < today;
 
-                return (
-                    <React.Fragment key={index}>
-                        <CardContent>
-                            {attivo ? (
-                                <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
-                                    Modifica Visita:
-                                </Typography>
-                            ) : (
-                                <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
-                                    Visualizza Visita:
-                                </Typography>
-                            )}
 
-                            <div className='edit_visit_Model'>
-                                <Box component="form"
-                                    sx={{
+                    return (
+                        <React.Fragment key={index}>
+                            <CardContent>
+                                {attivo ? (
+                                    <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
+                                        Modifica Visita:
+                                    </Typography>
+                                ) : (
+                                    <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
+                                        Visualizza Visita:
+                                    </Typography>
+                                )}
+
+                                <div className='edit_visit_Model'>
+                                    <Box component="form" onSubmit={(e) => handleSaveNewVisit(e, v.id)} noValidate sx={{
                                         '& .MuiTextField-root': { m: 1, width: '25ch' },
                                     }}>
-                                    <GenericField
-                                        label="Nome"
-                                        value={v.name}
-                                        onChange={(newValue) => handleFieldChange(index, 'name', newValue)}
-                                        disabled={!attivo}
-                                    />
+                                        <TextField
+                                            variant="standard"
+                                            margin="normal"
+                                            required
+                                            id="name"
+                                            label="Nome"
+                                            name="name"
+                                            defaultValue={v.name}
+                                            disabled={!attivo}
+                                            autoFocus
+                                        />
 
-                                    <GenericField
-                                        label="Email"
-                                        value={v.email}
-                                        onChange={(newValue) => handleFieldChange(index, 'email', newValue)}
-                                        placeholder="es. abcdefghi@abcde.abc"
-                                        disabled={!attivo}
-                                    />
+                                        <TextField
+                                            variant="standard"
+                                            margin="normal"
+                                            required
+                                            id="email"
+                                            label="Email Address"
+                                            name="email"
+                                            defaultValue={v.email}
+                                            disabled={!attivo}
+                                            autoFocus
+                                        />
 
-                                    <GenericField
-                                        label="Priorità"
-                                        value={v.priority}
-                                        onChange={(newValue) => handleFieldChange(index, 'priority', newValue)}
-                                        disabled={!attivo}
-                                    />
+                                        <TextField
+                                            sx={{ mb: 1.5, ml: 1 }}
+                                            select
+                                            name='priority'
+                                            label={'Priorità'}
+                                            defaultValue={v.priority}
+                                            disabled={!attivo}
 
+                                        >
+                                            {priority_value.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
 
+                                        <DateField
+                                            disablePast
+                                            margin="normal"
+                                            required
+                                            defaultValue={dayjs(v.date_visit)}
+                                            label="Data della Visita"
+                                            name="date"
+                                            id="date_visit"
+                                            variant="standard"
+                                            disabled={!attivo}
+                                        />
 
-                                    <GenericField
-                                        label='Data della Visita'
-                                        value={getDateOnly(v.date_visit)}
-                                        onChange={(newValue) => handleFieldChange(index, 'date_visit', new Date(newValue))}
-                                        placeholder="es. YYYY-MM-DD"
-                                        disabled={!attivo}
-                                    />
+                                        <TextField
+                                            variant="standard"
+                                            margin="normal"
+                                            required
+                                            id="description"
+                                            label="Descrizione"
+                                            name="description"
+                                            defaultValue={v.description}
+                                            autoFocus
+                                            disabled={!attivo}
+                                        />
 
-                                    <GenericField
-                                        label="Descrizione"
-                                        value={v.description}
-                                        onChange={(newValue) => handleFieldChange(index, 'description', newValue)}
-                                        disabled={!attivo}
-                                    />
-
-                                    <GenericField
-                                        label="Telefono"
-                                        value={v.tel}
-                                        onChange={(newValue) => handleFieldChange(index, 'tel', newValue)}
-                                        placeholder="es. +39 0123456789 "
-                                        disabled={!attivo}
-                                    />
-
-                                </Box>
-                            </div>
-
-
-                        </CardContent>
-                        <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-
-                            {attivo ? (
-                                <>
-                                    <Button
-                                        id='ButtonSave'
-                                        size="sm"
-                                        variant="soft"
-                                        color="success"
-                                    >
-                                        Salva
-                                    </Button>
-                                    <Button
-                                        id='ButtonBack'
-                                        size="sm"
-                                        variant="soft"
-                                        color="danger"
-                                        onClick={handleToggleEdit}
-                                    >
-                                        Annulla
-                                    </Button>
-
-                                </>
-                            ) : (
-                                <>
-                                    <Button
-                                        id='ButtonEdit'
-                                        size="sm"
-                                        variant="soft"
-                                        color="primary"
-                                        onClick={handleToggleEdit} // Chiamata alla funzione onOpenModal passando l'indice
-                                        disabled={isPastDate} // Disabilita il bottone se la data è nel passato
-                                    >
-                                        Modifica
-                                    </Button>
-
-                                    <Button
-                                        id='ButtonDelite'
-                                        size="sm"
-                                        variant="soft"
-                                        color="danger"
-                                        disabled={isPastDate} // Disabilita il bottone se la data è nel passato
-                                    >
-                                        Elimina
-                                    </Button>
-                                </>
-                            )}
+                                        <PhoneField
+                                            name='tel'
+                                            label='Telefono'
+                                            value={v.tel}
+                                            placeholder='es. +39 0123456789'// Aggiungi questa riga
+                                            disabled={!attivo}
+                                        />
 
 
-                        </Box>
-                    </React.Fragment>
-                );
-            })
-            }
-        </Card >
+
+                                        <div className='button-box'>
+
+                                            {attivo ? (
+                                                <>
+                                                    <Button
+                                                        type='submit'
+                                                        id='ButtonSave'
+                                                        size="small"
+                                                        variant="contained"
+                                                        color="success"
+                                                    >
+                                                        Salva
+                                                    </Button>
+                                                    <Button
+                                                        size="small"
+                                                        variant="contained"
+                                                        color="error"
+                                                        onClick={handleToggleEdit}
+                                                    >
+                                                        Annulla
+                                                    </Button>
+
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Button
+                                                        id='ButtonEdit'
+                                                        size="small"
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={handleToggleEdit} // Chiamata alla funzione onOpenModal passando l'indice
+                                                        disabled={isPastDate} // Disabilita il bottone se la data è nel passato
+                                                    >
+                                                        Modifica
+                                                    </Button>
+
+                                                    <Button
+                                                        id='ButtonDelite'
+                                                        size="small"
+                                                        variant="contained"
+                                                        color="error"
+                                                        disabled={isPastDate} // Disabilita il bottone se la data è nel passato
+                                                    >
+                                                        Elimina
+                                                    </Button>
+                                                </>
+                                            )}
+                                        </div>
+                                    </Box>
+                                </div>
+
+
+                            </CardContent>
+
+                        </React.Fragment>
+                    );
+                })
+                }
+            </Card >
+        </LocalizationProvider>
     );
 }
 

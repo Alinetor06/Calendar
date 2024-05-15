@@ -1,151 +1,171 @@
 import * as React from 'react';
-import { Card, CardContent, Typography } from '@mui/material';
-import { Box, Button } from '@mui/joy';
+import { Card, CardContent, MenuItem, TextField, Typography, Box, Button } from '@mui/material';
 import { useState } from 'react';
-import GenericField from './GenericField';
+import PhoneField from './PhoneField';
 import { Visita } from '../../../config/Visite';
+import { LocalizationProvider, DateField } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-const getDateOnly = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
+
+const priority_value = [
+    {
+        value: 0,
+        label: 'GREEN'
+    },
+    {
+        value: 1,
+        label: 'ORANGE'
+    },
+    {
+        value: 2,
+        label: 'RED'
+    }
+];
 
 const Save_Visit_Card: React.FC = () => {
-    const [fieldErrors, setFieldErrors] = useState<Record<string, string | undefined>>({});
-    const [newVisit, setNewVisit] = useState<Visita>({
-        id: 0,
-        name: '',
-        email: '',
-        priority: 0,
-        date_visit: new Date(),
-        description: '',
-        tel: ''
-    });
-    const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
 
-    const handleFieldChange = <T extends keyof Visita>(field: T, value: Visita[T]) => {
-        const newVisitCopy = { ...newVisit };
-        newVisitCopy[field] = value;
-        setNewVisit(newVisitCopy);
+    const [priority, setPriority] = useState(0);
 
-        setFieldErrors(prevErrors => ({
-            ...prevErrors,
-            [field]: undefined
-        }));
-
-        setTouchedFields(prevTouched => ({
-            ...prevTouched,
-            [field]: true
-        }));
+    const handlePriorityChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setPriority(event.target.value as number);
     };
 
-    const handleSaveNewVisit = () => {
-        console.log('Nuova visita salvata:', newVisit);
+    const [newVisit, setNewVisit] = useState<Visita>();
+
+
+    const handleSaveNewVisit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+
+        // Estrai i valori dal FormData
+        const name = data.get('name') as string;
+        const email = data.get('email') as string;
+        const date = data.get('date') as string; // Assicurati che l'id sia 'date' e non 'date_visit'
+        const priority = data.get('priority') as string;
+        const description = data.get('description') as string;
+        const tel = data.get('tel') as string
+        // Aggiorna lo stato newVisit con i nuovi valori
+
+
         setNewVisit({
-            id: 0,
-            name: '',
-            email: '',
-            priority: 0,
-            date_visit: new Date(),
-            description: '',
-            tel: ''
+            id: 0, // Potresti voler generare un id univoco per la nuova visita
+            name: name,
+            email: email,
+            priority: parseInt(priority), // Assicurati che priority sia un numero
+            date_visit: new Date(date), // Assicurati che la data venga parsata correttamente
+            description: description,
+            tel: tel // Non c'è un campo 'tel' nel FormData, quindi lo lascio vuoto
         });
-        setTouchedFields({});
+
+        console.log('Nuova visita salvata:', newVisit);
     };
 
-    // Verifica la validità dei campi e aggiorna gli errori
-    React.useEffect(() => {
-        const errors: Record<string, string> = {};
-        if (touchedFields.name && !newVisit.name.trim()) {
-            errors.name = "Il nome è richiesto";
-        }
-        // Verificare gli altri campi e aggiungere gli errori se necessario
 
-        setFieldErrors(errors);
-    }, [newVisit, touchedFields]);
 
-    // Controlla se ci sono errori nei campi toccati
-    const hasErrors = Object.values(fieldErrors).some(error => !!error);
+
 
     return (
-        <Card sx={{ minWidth: 275 }}>
-            <CardContent>
-                <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
-                    Creazione Visita:
-                </Typography>
-                <div className='save_visit_Model'>
-                    <Box component="form"
-                        sx={{
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Card sx={{ minWidth: 275 }}>
+                <CardContent>
+                    <Typography sx={{ mb: 1.5, ml: 1 }} color="text.secondary">
+                        Creazione Visita:
+                    </Typography>
+                    <div className='save_visit_Model'>
+                        <Box component="form" onSubmit={handleSaveNewVisit} noValidate sx={{
                             '& .MuiTextField-root': { m: 1, width: '25ch' },
                         }}>
-                        <GenericField
-                            label="Nome"
-                            value={newVisit.name}
-                            onChange={(newValue) => handleFieldChange('name', newValue)}
-                            error={fieldErrors['name']}
-                        />
+                            <TextField
+                                variant="standard"
+                                margin="normal"
+                                required
+                                id="name"
+                                label="Nome"
+                                name="name"
+                                autoComplete="name"
+                                autoFocus
+                            />
 
-                        <GenericField
-                            label="Email"
-                            value={newVisit.email}
-                            onChange={(newValue) => handleFieldChange('email', newValue)}
-                            placeholder="es. email@example.com"
-                            error={fieldErrors['email']}
-                        />
+                            <TextField
+                                variant="standard"
+                                margin="normal"
+                                required
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                            />
 
-                        <GenericField
-                            label="Priorità"
-                            value={newVisit.priority}
-                            onChange={(newValue) => handleFieldChange('priority', newValue)}
-                        />
+                            <TextField
+                                sx={{ mb: 1.5, ml: 1 }}
+                                select
+                                name='priority'
+                                label={'Priorità'}
+                                value={priority}
+                                onChange={handlePriorityChange}
 
-                        <GenericField
-                            label='Data della Visita'
-                            value={getDateOnly(newVisit.date_visit)}
-                            onChange={(newValue) => handleFieldChange('date_visit', new Date(newValue))}
-                            placeholder="es. YYYY-MM-DD"
-                            error={fieldErrors['date_visit']}
-                        />
+                            >
+                                {priority_value.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
 
-                        <GenericField
-                            label="Descrizione"
-                            value={newVisit.description}
-                            onChange={(newValue) => handleFieldChange('description', newValue)}
-                        />
+                            <DateField
+                                disablePast
+                                margin="normal"
+                                required
+                                label="Data della Visita"
+                                name="date"
+                                id="date_visit"
+                                variant="standard"
+                            />
 
-                        <GenericField
-                            label="Telefono"
-                            value={newVisit.tel}
-                            onChange={(newValue) => handleFieldChange('tel', newValue)}
-                            placeholder="es. +39 0123456789"
-                            error={fieldErrors['tel']}
-                        />
-                    </Box>
-                </div>
+                            <TextField
+                                variant="standard"
+                                margin="normal"
+                                required
+                                id="description"
+                                label="Descrizione"
+                                name="description"
+                                autoFocus
+                            />
 
-                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                    <Button
-                        size="sm"
-                        variant="soft"
-                        color="success"
-                        onClick={handleSaveNewVisit}
-                        disabled={hasErrors}
-                    >
-                        Salva
-                    </Button>
+                            <PhoneField
+                                name='tel'
+                                label='Telefono'
+                                value=''
+                                placeholder='es. +39 0123456789'// Aggiungi questa riga
+                            />
 
-                    <Button
-                        size="sm"
-                        variant="soft"
-                        color="danger"
-                    >
-                        Annulla
-                    </Button>
-                </Box>
-            </CardContent>
-        </Card>
+
+
+                            <div className='button-box'>
+
+                                <Button
+                                    type='submit'
+                                    size="small"
+                                    variant="contained"
+                                    color="success"
+                                >
+                                    Salva
+                                </Button>
+
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    color="error"
+                                >
+                                    Annulla
+                                </Button>
+                            </div>
+                        </Box>
+                    </div>
+                </CardContent>
+            </Card >
+        </LocalizationProvider>
     );
 }
 

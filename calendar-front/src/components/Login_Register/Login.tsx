@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container } from '@mui/material';
 import { Link } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -6,7 +7,28 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+interface SignInProps {
+    setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function SignIn({ setAuthenticated }: SignInProps) {
+
+    const [email, setEmail] = React.useState('');
+    const [emailError, setEmailError] = React.useState('');
+
+    const handleEmailChange = (event: { target: { value: any; }; }) => {
+        const newEmail = event.target.value;
+        setEmail(newEmail);
+
+        // Validazione dell'email con espressione regolare
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const isValid = emailRegex.test(newEmail);
+        setEmailError(isValid ? '' : 'Email non valida');
+    };
+
+
+    let navigate = useNavigate();
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -14,6 +36,12 @@ export default function SignIn() {
             email: data.get('email'),
             password: data.get('password'),
         });
+
+        // Simulazione di accesso con successo
+        setAuthenticated(true);
+
+        // Reindirizza l'utente verso la route desiderata
+        navigate('/CalendarSecretary');
     };
 
     return (
@@ -35,6 +63,7 @@ export default function SignIn() {
                         Sign in
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+
                         <TextField
                             margin="normal"
                             required
@@ -44,6 +73,10 @@ export default function SignIn() {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            value={email}
+                            onChange={handleEmailChange}
+                            error={!!emailError}
+                            helperText={emailError}
                         />
                         <TextField
                             margin="normal"
@@ -63,8 +96,6 @@ export default function SignIn() {
                         >
                             Sign In
                         </Button>
-
-
 
                         <Grid spacing={2} container>
                             <Grid item xs>
