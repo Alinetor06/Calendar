@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DataPicker from './DataPicker';
-import { CardSlider } from '../ShowCard/ShowSlideCard';
-import ModalComponent from '../ShowCard/ModalComponent';
-import { Visita } from '../../../config/Visite';
+import DataPicker from '../components/Secretary/Calendar/DataPicker';
+import { CardSlider } from '../components/Secretary/ShowCard/ShowSlideCard';
+import ModalComponent from '../components/Secretary/ShowCard/ModalComponent';
+import { Visita } from '../config/Visite';
 import { Dayjs } from 'dayjs';
 
 

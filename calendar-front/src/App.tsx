@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import './css/App.css';
-import SignIn from './components/Login_Register/Login'
-import SearchSecretary from './components/Secretary/SerchSecretary';
-import CalendarSecretary from './components/Secretary/Calendar/CalendarSecretary';
-import Home from './components/Home/Home';
+import SignIn from './pages/Login_Register/Login'
+import SearchSecretary from './pages/SerchSecretary';
+import CalendarSecretary from './pages/CalendarSecretary';
+import Home from './pages/Home/Home';
 import Navbar from './components/NavBar/NavBar';
-import SignUp from './components/Login_Register/Registrazione';
+import SignUp from './pages/Login_Register/Registrazione';
 import NotFound from './components/NotFound';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 

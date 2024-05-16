@@ -1,6 +1,6 @@
-import { Visita } from '../../config/Visite';
-import { CardSlider } from './ShowCard/ShowSlideCard'
-import Search_Visit_Card from './TypoCard/SearchCard';
+import { Visita } from '../config/Visite';
+import { CardSlider } from '../components/Secretary/ShowCard/ShowSlideCard'
+import Search_Visit_Card from '../components/Secretary/TypoCard/SearchCard';
 import React, { useState } from 'react';
 
 
