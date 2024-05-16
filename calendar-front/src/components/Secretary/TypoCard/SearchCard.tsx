@@ -11,8 +11,6 @@ interface SearchVisitCardProps {
 const Search_Visit_Card: React.FC<SearchVisitCardProps> = ({ onParamsChange }) => {
 
 
-    const [error, setError] = React.useState<string | undefined>(undefined);
-
 
     const handleSearchVisits = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -32,19 +30,14 @@ const Search_Visit_Card: React.FC<SearchVisitCardProps> = ({ onParamsChange }) =
 
 
 
-    const handleInputBlur = (label: string, inputValue: string, setError: any) => {
+    const [errorName, setErrorName] = React.useState<string | undefined>(undefined);
+    const [errorEmail, setErrorEmail] = React.useState<string | undefined>(undefined);
 
-        if ((label === 'Nome') && !isValidName(inputValue)) {
-            setError(`${label} non valido`);
-            return;
-        }
-        if (label === 'Email' && !isValidEmail(inputValue)) {
-            setError('Email non valida');
-            return;
-        }
-        setError(undefined); // Clear error when no validation issues
+
+    const handleInputBlur = (inputValue: string, setError: (error: string | undefined) => void, validator: (value: string) => boolean, errorMessage: string) => {
+        const error = validator(inputValue) ? undefined : errorMessage;
+        setError(error);
     }
-
 
 
     const isValidEmail = (email: string): boolean => {
@@ -78,31 +71,30 @@ const Search_Visit_Card: React.FC<SearchVisitCardProps> = ({ onParamsChange }) =
                                 <TextField
                                     variant="standard"
                                     margin="normal"
-                                    required
                                     id="email"
                                     label="Email Address"
                                     name="email"
                                     autoComplete="email"
-                                    onBlur={(e) => handleInputBlur('Email', e.target.value, setError)}
-                                    error={!!error}
+                                    onBlur={(e) => handleInputBlur(e.target.value, setErrorEmail, isValidEmail, 'Email non valida')}
+                                    error={!!errorEmail}
+                                    helperText={errorEmail}
                                     autoFocus
 
                                 />
                                 <TextField
                                     variant="standard"
                                     margin="normal"
-                                    required
                                     id="name"
                                     label="Nome"
                                     name="name"
                                     autoComplete="name"
                                     autoFocus
-                                    onBlur={(e) => handleInputBlur('Nome', e.target.value, setError)}
-                                    error={!!error}
+                                    onBlur={(e) => handleInputBlur(e.target.value, setErrorName, isValidName, 'Nome non valido')}
+                                    error={!!errorName}
+                                    helperText={errorName}
                                 />
                                 <DateField
                                     margin="normal"
-                                    required
                                     label="Data della Visita"
                                     name="date"
                                     id="date_visit"
@@ -117,6 +109,7 @@ const Search_Visit_Card: React.FC<SearchVisitCardProps> = ({ onParamsChange }) =
                                     size="small"
                                     variant="contained"
                                     color="primary"
+                                    disabled={!!errorName || !!errorEmail} // Disabilita il pulsante se c'è almeno un errore
                                 >
                                     Cerca
                                 </Button>

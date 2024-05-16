@@ -60,6 +60,8 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
     const [updatedVisite, setUpdatedVisite] = useState(visiteData);
 
 
+    //Gestione errori
+
     const [errorName, setErrorName] = React.useState<string | undefined>(undefined);
     const [errorEmail, setErrorEmail] = React.useState<string | undefined>(undefined);
 
@@ -68,9 +70,6 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
         const error = validator(inputValue) ? undefined : errorMessage;
         setError(error);
     }
-
-
-
 
 
     const isValidEmail = (email: string): boolean => {
