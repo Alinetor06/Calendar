@@ -14,20 +14,12 @@ class visiteController extends Controller
     public function index()
     {
         $visits = Visite::query()
+            ->select()
             ->where('userId', request()->user()->id)
             ->orderBy('giorno della visita')
             ->get();
 
-        return view('calendar.home', ['visite', $visits]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request)
-    {
-        return view('calendar.create');
-
+        return ['visite', $visits];
     }
 
     /**

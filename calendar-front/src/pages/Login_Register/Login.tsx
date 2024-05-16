@@ -4,6 +4,7 @@ import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Containe
 import { Link } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
 
 const defaultTheme = createTheme();
 
@@ -37,11 +38,20 @@ export default function SignIn({ setAuthenticated }: SignInProps) {
             password: data.get('password'),
         });
 
-        // Simulazione di accesso con successo
-        setAuthenticated(true);
+        axios.post('/auth/login', {
+            email: data.get('email'),
+            password: data.get('password')
+        })
+            .then((response) => {
+                console.log(response);
+                // Simulazione di accesso con successo
+                setAuthenticated(true);
+                // Reindirizza l'utente verso la route desiderata
+                navigate('/CalendarSecretary');
+            }, (error) => {
+                console.log(error);
+            });
 
-        // Reindirizza l'utente verso la route desiderata
-        navigate('/CalendarSecretary');
     };
 
     return (

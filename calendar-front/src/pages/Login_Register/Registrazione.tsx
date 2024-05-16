@@ -3,6 +3,7 @@ import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Containe
 import { Link } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
 
 
 
@@ -15,9 +16,27 @@ export default function SignUp() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({
+            firstName: data.get('firstName'),
+            lastName: data.get('lastName'),
             email: data.get('email'),
             password: data.get('password'),
         });
+
+
+        axios.post('/auth/register', {
+            firstName: data.get('firstName'),
+            lastName: data.get('lastName'),
+            email: data.get('email'),
+            password: data.get('password')
+        })
+            .then((response) => {
+                console.log(response);
+                // Simulazione di accesso con successo
+                // Reindirizza l'utente verso la route desiderata
+
+            }, (error) => {
+                console.log(error);
+            });
     };
 
     return (
