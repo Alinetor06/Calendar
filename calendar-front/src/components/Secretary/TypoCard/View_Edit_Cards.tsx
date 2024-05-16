@@ -60,6 +60,28 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
     const [updatedVisite, setUpdatedVisite] = useState(visiteData);
 
 
+    const [errorName, setErrorName] = React.useState<string | undefined>(undefined);
+    const [errorEmail, setErrorEmail] = React.useState<string | undefined>(undefined);
+
+
+    const handleInputBlur = (inputValue: string, setError: (error: string | undefined) => void, validator: (value: string) => boolean, errorMessage: string) => {
+        const error = validator(inputValue) ? undefined : errorMessage;
+        setError(error);
+    }
+
+
+
+
+
+    const isValidEmail = (email: string): boolean => {
+        return /\S+@\S+\.\S+/.test(email.trim());
+    };
+
+    const isValidName = (name: string): boolean => {
+        return /^[a-zA-Z ]+$/.test(name.trim());// Allowing spaces in the name
+    };
+
+
     function handleSaveNewVisit(event: React.FormEvent<HTMLFormElement>, visitId: number): void {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -118,6 +140,7 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
                                     <Box component="form" onSubmit={(e) => handleSaveNewVisit(e, v.id)} noValidate sx={{
                                         '& .MuiTextField-root': { m: 1, width: '25ch' },
                                     }}>
+
                                         <TextField
                                             variant="standard"
                                             margin="normal"
@@ -127,6 +150,9 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
                                             name="name"
                                             defaultValue={v.name}
                                             disabled={!attivo}
+                                            onBlur={(e) => handleInputBlur(e.target.value, setErrorName, isValidName, 'Nome non valido')}
+                                            error={!!errorName}
+                                            helperText={errorName}
                                             autoFocus
                                         />
 
@@ -139,6 +165,9 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
                                             name="email"
                                             defaultValue={v.email}
                                             disabled={!attivo}
+                                            onBlur={(e) => handleInputBlur(e.target.value, setErrorEmail, isValidEmail, 'Email non valida')}
+                                            error={!!errorEmail}
+                                            helperText={errorEmail}
                                             autoFocus
                                         />
 
@@ -202,6 +231,7 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
                                                         size="small"
                                                         variant="contained"
                                                         color="success"
+                                                        disabled={!!errorName || !!errorEmail} // Disabilita il pulsante se c'è almeno un errore
                                                     >
                                                         Salva
                                                     </Button>

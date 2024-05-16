@@ -11,6 +11,9 @@ interface SearchVisitCardProps {
 const Search_Visit_Card: React.FC<SearchVisitCardProps> = ({ onParamsChange }) => {
 
 
+    const [error, setError] = React.useState<string | undefined>(undefined);
+
+
     const handleSearchVisits = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -26,6 +29,32 @@ const Search_Visit_Card: React.FC<SearchVisitCardProps> = ({ onParamsChange }) =
 
         onParamsChange({ name: name, email: email, date: new Date(date) });
     }
+
+
+
+    const handleInputBlur = (label: string, inputValue: string, setError: any) => {
+
+        if ((label === 'Nome') && !isValidName(inputValue)) {
+            setError(`${label} non valido`);
+            return;
+        }
+        if (label === 'Email' && !isValidEmail(inputValue)) {
+            setError('Email non valida');
+            return;
+        }
+        setError(undefined); // Clear error when no validation issues
+    }
+
+
+
+    const isValidEmail = (email: string): boolean => {
+        return /\S+@\S+\.\S+/.test(email.trim());
+    };
+
+    const isValidName = (name: string): boolean => {
+        return /^[a-zA-Z ]+$/.test(name.trim());// Allowing spaces in the name
+    };
+
 
 
     return (
@@ -54,7 +83,10 @@ const Search_Visit_Card: React.FC<SearchVisitCardProps> = ({ onParamsChange }) =
                                     label="Email Address"
                                     name="email"
                                     autoComplete="email"
+                                    onBlur={(e) => handleInputBlur('Email', e.target.value, setError)}
+                                    error={!!error}
                                     autoFocus
+
                                 />
                                 <TextField
                                     variant="standard"
@@ -65,6 +97,8 @@ const Search_Visit_Card: React.FC<SearchVisitCardProps> = ({ onParamsChange }) =
                                     name="name"
                                     autoComplete="name"
                                     autoFocus
+                                    onBlur={(e) => handleInputBlur('Nome', e.target.value, setError)}
+                                    error={!!error}
                                 />
                                 <DateField
                                     margin="normal"

@@ -5,7 +5,7 @@ import { Modal, Box } from "@mui/material";
 import { Visita } from '../../../config/Visite';
 
 //components
-import Card from "../TypoCard/View_Edit_Save_Cards";
+import Card from "../TypoCard/View_Edit_Cards";
 import Card2 from "../TypoCard/Save_Visit_Card"
 
 

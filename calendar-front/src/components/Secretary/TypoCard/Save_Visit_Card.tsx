@@ -32,6 +32,26 @@ const Save_Visit_Card: React.FC = () => {
 
     const [newVisit, setNewVisit] = useState<Visita>();
 
+    //Gestione degli errori
+
+    const [errorName, setErrorName] = React.useState<string | undefined>(undefined);
+    const [errorEmail, setErrorEmail] = React.useState<string | undefined>(undefined);
+
+
+    const handleInputBlur = (inputValue: string, setError: (error: string | undefined) => void, validator: (value: string) => boolean, errorMessage: string) => {
+        const error = validator(inputValue) ? undefined : errorMessage;
+        setError(error);
+    }
+
+    const isValidEmail = (email: string): boolean => {
+        return /\S+@\S+\.\S+/.test(email.trim());
+    };
+
+    const isValidName = (name: string): boolean => {
+        return /^[a-zA-Z ]+$/.test(name.trim());// Allowing spaces in the name
+    };
+
+    //Gestione della Save Visit
 
     const handleSaveNewVisit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -83,6 +103,9 @@ const Save_Visit_Card: React.FC = () => {
                                 label="Nome"
                                 name="name"
                                 autoComplete="name"
+                                onBlur={(e) => handleInputBlur(e.target.value, setErrorName, isValidName, 'Nome non valido')}
+                                error={!!errorName}
+                                helperText={errorName}
                                 autoFocus
                             />
 
@@ -94,6 +117,9 @@ const Save_Visit_Card: React.FC = () => {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                onBlur={(e) => handleInputBlur(e.target.value, setErrorEmail, isValidEmail, 'Email non valida')}
+                                error={!!errorEmail}
+                                helperText={errorEmail}
                                 autoFocus
                             />
 
@@ -149,6 +175,7 @@ const Save_Visit_Card: React.FC = () => {
                                     size="small"
                                     variant="contained"
                                     color="success"
+                                    disabled={!!errorName || !!errorEmail} // Disabilita il pulsante se c'è almeno un errore
                                 >
                                     Salva
                                 </Button>
