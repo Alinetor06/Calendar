@@ -26,10 +26,11 @@ class visiteFactory extends Factory
 
         return [
             'name' => fake()->realText(2),
-            'età' => fake()->numberBetween(1, 80),
-            'note' => fake()->realText(200),
-            'giorno della visita' => fake()->dateTimeBetween(Carbon::now(), $maxDate),
-            'importanza' => fake()->numberBetween(1, 3),
+            'email' => fake()->realText(200),
+            'description' => fake()->realText(200),
+            'visit_day' => fake()->dateTimeBetween(Carbon::now(), $maxDate),
+            'priority' => fake()->numberBetween(1, 3),
+            'tel' => fake()->phoneNumber()
         ];
     }
 }

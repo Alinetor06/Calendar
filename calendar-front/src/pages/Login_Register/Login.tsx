@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 
 const defaultTheme = createTheme();
+axios.defaults.baseURL = 'http://localhost:8000';
 
 interface SignInProps {
     setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;

@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\visiteController;
+use App\Http\Controllers\VisiteController;
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('visite', visiteController::class);
+Route::prefix('api')->group(function () {
+    Route::resource('visite', VisiteController::class);
+});

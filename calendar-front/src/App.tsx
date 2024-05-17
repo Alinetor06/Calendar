@@ -6,7 +6,7 @@ import CalendarSecretary from './pages/CalendarSecretary';
 import Home from './pages/Home/Home';
 import Navbar from './components/NavBar/NavBar';
 import SignUp from './pages/Login_Register/Registrazione';
-import NotFound from './components/NotFound';
+import NotFound from './pages/NotFound';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {

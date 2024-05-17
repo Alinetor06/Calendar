@@ -8,6 +8,10 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { green } from '@mui/material/colors';
 import CheckIcon from '@mui/icons-material/Check';
 import { Visita } from '../../../config/Visite';
+import axios from 'axios';
+
+
+axios.defaults.baseURL = 'http://localhost:8000';
 
 interface DatePickerProps {
     onDateChange: (date: Dayjs | null) => void;
@@ -20,65 +24,17 @@ export default function DatePicker({ onDateChange }: DatePickerProps) {
     const [dati, setDati] = React.useState<Visita[]>([]);
     const [isLoading, setIsLoading] = React.useState(false);
 
+
     React.useEffect(() => {
-        setDati([
-            {
-                id: 1,
-                name: 'Night view',
-                description: '4.21M views',
-                priority: 1,
-                date_visit: new Date('2024-05-30'),
-                email: 'adkmvoadvokm@gmail.com',
-                tel: '+39323253252'
-
-            },
-            {
-                id: 2,
-                name: 'Lake view',
-                description: '4.74M views',
-                priority: 1,
-                date_visit: new Date('2024-05-12'),
-                email: 'adkmvoadvokm@gmail.com',
-                tel: '+39323253252'
-            },
-            {
-                id: 3,
-                name: 'Mountain view',
-                description: '3.98M views',
-                priority: 1,
-                date_visit: new Date('2024-04-03'),
-                email: 'adkmvoadvokm@gmail.com',
-                tel: '+39323253252'
-            },
-            {
-                id: 4,
-                name: 'Mountain view',
-                description: '3.98M views',
-                priority: 1,
-                date_visit: new Date('2024-02-03'),
-                email: 'adkmvoadvokm@gmail.com',
-                tel: '+39323253252'
-            },
-            {
-                id: 5,
-                name: 'Mountain view',
-                description: '3.98M views',
-                priority: 1,
-                date_visit: new Date('2024-05-01'),
-                email: 'adkmvoadvokm@gmail.com',
-                tel: '+39323253252'
-            },
-            {
-                id: 6,
-                name: 'Mountain view',
-                description: '3.98M views',
-                priority: 1,
-                date_visit: new Date('2024-05-05'),
-                email: 'adkmvoadvokm@gmail.com',
-                tel: '+39323253252'
-            },
-
-        ])
+        axios.get('/visite', {
+        })
+            .then((response) => {
+                console.log(response.data);
+                setDati(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     const handleDateChange = (date: Dayjs | null) => {

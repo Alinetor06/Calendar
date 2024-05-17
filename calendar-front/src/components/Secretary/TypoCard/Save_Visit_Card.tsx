@@ -5,22 +5,16 @@ import PhoneField from './PhoneField';
 import { Visita } from '../../../config/Visite';
 import { LocalizationProvider, DateField } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import axios from 'axios';
 
 
 const priority_value = [
-    {
-        value: 0,
-        label: 'GREEN'
-    },
-    {
-        value: 1,
-        label: 'ORANGE'
-    },
-    {
-        value: 2,
-        label: 'RED'
-    }
+    { value: 0, label: 'GREEN' },
+    { value: 1, label: 'ORANGE' },
+    { value: 2, label: 'RED' }
 ];
+
+axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
 const Save_Visit_Card: React.FC = () => {
 
@@ -57,24 +51,34 @@ const Save_Visit_Card: React.FC = () => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
-        // Estrai i valori dal FormData
-        const name = data.get('name') as string;
-        const email = data.get('email') as string;
-        const date = data.get('date') as string; // Assicurati che l'id sia 'date' e non 'date_visit'
-        const priority = data.get('priority') as string;
-        const description = data.get('description') as string;
-        const tel = data.get('tel') as string
-        // Aggiorna lo stato newVisit con i nuovi valori
 
+        axios.post('http://localhost:8000/api/visite', {
+            name: data.get('name'),
+            email: data.get('email'),
+            visit_day: data.get('date'), // Assicurati di usare 'visit_day' invece di 'visit_date'
+            priority: data.get('priority'),
+            description: data.get('description'),
+            tel: data.get('tel')
+        }, {
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            }
+        })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
 
         setNewVisit({
             id: 0, // Potresti voler generare un id univoco per la nuova visita
-            name: name,
-            email: email,
-            priority: parseInt(priority), // Assicurati che priority sia un numero
-            date_visit: new Date(date), // Assicurati che la data venga parsata correttamente
-            description: description,
-            tel: tel // Non c'è un campo 'tel' nel FormData, quindi lo lascio vuoto
+            name: data.get('name') as string,
+            email: data.get('email') as string,
+            priority: parseInt(data.get('priority') as string), // Assicurati che priority sia un numero
+            date_visit: new Date(data.get('date') as string), // Assicurati che la data venga parsata correttamente
+            description: data.get('description') as string,
+            tel: data.get('tel') as string // Non c'è un campo 'tel' nel FormData, quindi lo lascio vuoto
         });
 
         console.log('Nuova visita salvata:', newVisit);

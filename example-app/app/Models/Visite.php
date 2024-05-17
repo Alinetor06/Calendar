@@ -13,8 +13,8 @@ class Visite extends Model
         'userId',
         'name',
         'email',
-        'note',
-        'giorno della visita',
-        'importanza'
+        'description',
+        'visit_day',
+        'priority'
     ];
 }
