@@ -38,7 +38,7 @@ export default function SignIn({ setAuthenticated }: SignInProps) {
             password: data.get('password'),
         });
 
-        axios.post('/auth/login', {
+        axios.post('api/auth/login', {
             email: data.get('email'),
             password: data.get('password')
         })

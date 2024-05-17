@@ -9,17 +9,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-
 class LoginRegisterController extends Controller
 {
     /**
      * Creazione User
-     *  @param Request $request
-     *  @return User
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function createUser(Request $request)
     {
-
         try {
             //validazione
             $validateUser = Validator::make(
@@ -33,26 +31,28 @@ class LoginRegisterController extends Controller
             );
 
             if ($validateUser->fails()) {
-                return response() - json([
+                return response()->json([
                     'status' => false,
-                    'message' => 'validation error',
+                    'message' => 'Errore di validazione',
                     'errors' => $validateUser->errors()
                 ], 401);
             }
+
             $user = User::create([
-                'name' => $request->name,
+                'firstName' => $request->firstName,
+                'lastName' => $request->lastName,
                 'email' => $request->email,
                 'password' => Hash::make($request->password)
             ]);
 
-            return response() - json([
+            return response()->json([
                 'status' => true,
-                'message' => 'Utente Creato con successo',
+                'message' => 'Utente creato con successo',
                 'token' => $user->createToken('API Token')->plainTextToken
             ], 200);
 
         } catch (\Throwable $th) {
-            return response() - json([
+            return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
             ], 500);
@@ -62,9 +62,8 @@ class LoginRegisterController extends Controller
     /**
      * Login dell'Utente
      * @param Request $request
-     * @return User
+     * @return \Illuminate\Http\JsonResponse
      */
-
     public function loginUser(Request $request)
     {
         try {
@@ -77,35 +76,34 @@ class LoginRegisterController extends Controller
             );
 
             if ($validateUser->fails()) {
-                return response() - json([
+                return response()->json([
                     'status' => false,
-                    'message' => 'Errore nella validazione dei dati inseriti',
+                    'message' => 'Errore di validazione dei dati inseriti',
                     'errors' => $validateUser->errors()
                 ], 401);
             }
 
             if (!Auth::attempt($request->only('email', 'password'))) {
-                return response() - json([
+                return response()->json([
                     'status' => false,
-                    'message' => 'Email e Password non corrispondono ai nostri dati '
+                    'message' => 'Email e Password non corrispondono ai nostri dati'
                 ], 401);
             }
 
             $user = User::where('email', $request->email)->first();
 
-            return response() - json([
+            return response()->json([
                 'status' => true,
-                'message' => 'Utente ha Acceduto con Successo',
+                'message' => 'Utente ha acceduto con successo',
                 'token' => $user->createToken('API Token')->plainTextToken
             ], 200);
 
         } catch (\Throwable $th) {
-            return response() - json([
+            return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
             ], 500);
         }
     }
-
-
 }
+

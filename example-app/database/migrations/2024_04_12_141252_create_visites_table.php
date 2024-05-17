@@ -10,17 +10,19 @@ return new class extends Migration {
      */
     public function up(): void
     {
+
         Schema::create('visites', function (Blueprint $table) {
             $table->id();
             $table->foreignId('userId')->constrained('user')->cascadeOnDelete();
             $table->string('name');
-            $table->integer('età');
-            $table->string('note');
-            $table->date('giorno della visita');
-            $table->integer('importanza');
+            $table->string('email');
+            $table->string('description');
+            $table->date('visit_day');
+            $table->integer('priority');
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

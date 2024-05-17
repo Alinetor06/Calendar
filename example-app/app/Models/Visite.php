@@ -12,7 +12,7 @@ class Visite extends Model
     protected $fillable = [
         'userId',
         'name',
-        'età',
+        'email',
         'note',
         'giorno della visita',
         'importanza'
