@@ -1,15 +1,18 @@
-import React from 'react';
-import { StyledEngineProvider } from '@mui/material/styles';
-import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
-import './css/index.css';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.css'
+import { RouterProvider } from 'react-router-dom'
+import router from './router.tsx'
+import { ContextProvider } from './context/ContextProvider.tsx'
 
-
-<meta name="csrf-token" content="{{ csrf_token() }}"></meta>
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-      <App />
-    </StyledEngineProvider>
+
+    <ContextProvider>
+
+      <RouterProvider router={router} />
+
+    </ContextProvider>
+
   </React.StrictMode>,
-);
+)

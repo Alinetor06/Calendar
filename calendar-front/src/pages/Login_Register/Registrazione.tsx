@@ -1,42 +1,43 @@
-import * as React from 'react';
-import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container } from '@mui/material';
+import React, { useState } from 'react';
+import { Avatar, Button, TextField, Grid, Box, Typography, createTheme, ThemeProvider, Container, CssBaseline } from '@mui/material';
 import { Link } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
+import axiosClient from '../../axios-client';
+import { useStateContext } from '../../context/ContextProvider';
 
-
-// Configura la base URL per Axios
-axios.defaults.baseURL = 'http://localhost:8000';
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
+interface SignUpResponse {
+    user: any;
+    token: string;
+}
+
 export default function SignUp() {
+    const [errors, setErrors] = useState<{ [key: string]: string[] } | null>(null);
+    const { setUser, setToken } = useStateContext();
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            firstName: data.get('firstName'),
-            lastName: data.get('lastName'),
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const payload = new FormData(event.currentTarget);
 
+        const data = {
+            name: payload.get('name'),
+            email: payload.get('email'),
+            password: payload.get('password'),
+            password_confirmation: payload.get('password_confirmation'), // Changed here
+        };
 
-        axios.post('api/auth/register', {
-            firstName: data.get('firstName'),
-            lastName: data.get('lastName'),
-            email: data.get('email'),
-            password: data.get('password')
-        })
-            .then((response) => {
-                console.log(response);
-                // Simulazione di accesso con successo
-                // Reindirizza l'utente verso la route desiderata
-
-            }, (error) => {
-                console.log(error);
+        axiosClient.post<SignUpResponse>('/signup', data)
+            .then(({ data }) => {
+                setUser(data.user);
+                setToken(data.token);
+            })
+            .catch(err => {
+                const response = err.response;
+                if (response && response.status === 422) {
+                    console.log(response.data.errors);
+                    setErrors(response.data.errors);
+                }
             });
     };
 
@@ -60,24 +61,13 @@ export default function SignUp() {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    autoComplete="given-name"
-                                    name="firstName"
-                                    required
-                                    fullWidth
-                                    id="firstName"
-                                    label="First Name"
-                                    autoFocus
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12}>
                                 <TextField
                                     required
                                     fullWidth
-                                    id="lastName"
-                                    label="Last Name"
-                                    name="lastName"
+                                    id="name"
+                                    label="Name"
+                                    name="name"
                                     autoComplete="family-name"
                                 />
                             </Grid>
@@ -102,7 +92,26 @@ export default function SignUp() {
                                     autoComplete="new-password"
                                 />
                             </Grid>
-
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="password_confirmation" // Changed here
+                                    label="Conferma Password"
+                                    type="password"
+                                    id="password_confirmation" // Changed here
+                                    autoComplete="new-password"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                {errors &&
+                                    <div className="alert">
+                                        {Object.keys(errors).map(key => (
+                                            <p key={key}>{errors[key][0]}</p>
+                                        ))}
+                                    </div>
+                                }
+                            </Grid>
                         </Grid>
                         <Button
                             type="submit"
@@ -114,7 +123,7 @@ export default function SignUp() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link to="/SignIn">
+                                <Link to="/Login">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>

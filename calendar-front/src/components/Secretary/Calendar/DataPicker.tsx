@@ -7,11 +7,9 @@ import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { green } from '@mui/material/colors';
 import CheckIcon from '@mui/icons-material/Check';
-import { Visita } from '../../../config/Visite';
-import axios from 'axios';
+import { Visita } from '../../../configuration/Visite'
+import axiosClient from '../../../axios-client';
 
-
-axios.defaults.baseURL = 'http://localhost:8000';
 
 interface DatePickerProps {
     onDateChange: (date: Dayjs | null) => void;
@@ -22,20 +20,28 @@ export default function DatePicker({ onDateChange }: DatePickerProps) {
 
     const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(null); // Aggiorna il tipo di stato
     const [dati, setDati] = React.useState<Visita[]>([]);
+    const [isLoadingMonth, setIsLoadingMonth] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
 
-
     React.useEffect(() => {
-        axios.get('/visite', {
+        getData();
+    }, []);
+
+
+    const getData = () => {
+        setIsLoading(true)
+        axiosClient.get('/visite', {
         })
-            .then((response) => {
-                console.log(response.data);
-                setDati(response.data);
+            .then(({ data }) => {
+                console.log(data);
+                setIsLoading(false)
+                setDati(data);
             })
             .catch((error) => {
+                setIsLoading(false)
                 console.log(error);
             });
-    }, []);
+    }
 
     const handleDateChange = (date: Dayjs | null) => {
         setSelectedDate(date);
@@ -43,10 +49,10 @@ export default function DatePicker({ onDateChange }: DatePickerProps) {
     };
 
     const handleMonthChange = () => {
-        setIsLoading(true);
+        setIsLoadingMonth(true);
         // Simulate loading for demonstration purposes
         setTimeout(() => {
-            setIsLoading(false);
+            setIsLoadingMonth(false);
         }, 500);
     };
 
@@ -75,7 +81,7 @@ export default function DatePicker({ onDateChange }: DatePickerProps) {
                 <DateCalendar
                     value={selectedDate} // Utilizza value invece di defaultValue
                     onChange={handleDateChange} // Aggiorna lo stato quando la data viene cambiata
-                    loading={isLoading}
+                    loading={isLoadingMonth}
                     onMonthChange={handleMonthChange}
                     slots={{
                         day: ServerDay,

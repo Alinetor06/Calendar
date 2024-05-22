@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 import { Box, Button } from '@mui/joy';
-import { Visita } from '../../../config/Visite';
+import { Visita } from '../../../configuration/Visite';
 
 
 // Specifica il tipo di 'visit' usando l'interfaccia definita

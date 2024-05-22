@@ -8,21 +8,22 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-
-        Schema::create('visites', function (Blueprint $table) {
+        Schema::create('visits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('userId')->constrained('user')->cascadeOnDelete();
-            $table->string('name');
+            $table->unsignedBigInteger('user_id');
+            $table->string('name', 55);
             $table->string('email');
-            $table->string('description');
             $table->date('visit_day');
+            $table->string('description', 150);
             $table->integer('priority');
+            $table->string('tel', 15);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
-
 
     /**
      * Reverse the migrations.

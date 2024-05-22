@@ -1,4 +1,4 @@
-import { Visita } from '../config/Visite';
+import { Visita } from '../configuration/Visite';
 import { CardSlider } from '../components/Secretary/ShowCard/ShowSlideCard'
 import Search_Visit_Card from '../components/Secretary/TypoCard/SearchCard';
 import React, { useState } from 'react';

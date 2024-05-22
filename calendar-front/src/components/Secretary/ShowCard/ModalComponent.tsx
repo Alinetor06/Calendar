@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, Box } from "@mui/material";
 
 //config
-import { Visita } from '../../../config/Visite';
+import { Visita } from '../../../configuration/Visite';
 
 //components
 import Card from "../TypoCard/View_Edit_Cards";

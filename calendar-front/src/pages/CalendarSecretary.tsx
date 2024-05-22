@@ -8,7 +8,7 @@ import { Dayjs } from 'dayjs';
 import axios from "axios";
 
 //configurazione
-import { Visita } from '../config/Visite';
+import { Visita } from '../configuration/Visite';
 
 
 const CalendarSecretary: React.FC<{}> = () => {

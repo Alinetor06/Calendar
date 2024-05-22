@@ -7,7 +7,7 @@ import { LocalizationProvider, DateField } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 //configurazioni
-import { Visita } from '../../../config/Visite';
+import { Visita } from '../../../configuration/Visite';
 
 
 

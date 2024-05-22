@@ -1,58 +1,54 @@
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container } from '@mui/material';
+import React, { useState } from 'react';
+import { Avatar, Button, TextField, Grid, Box, Typography, ThemeProvider, Container, CssBaseline, createTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
+import axiosClient from '../../axios-client';
+import { useStateContext } from '../../context/ContextProvider';
 
 const defaultTheme = createTheme();
-axios.defaults.baseURL = 'http://localhost:8000';
 
-interface SignInProps {
-    setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+interface SignInResponse {
+    user: any;
+    token: string;
 }
 
-export default function SignIn({ setAuthenticated }: SignInProps) {
+export default function SignIn() {
 
-    const [email, setEmail] = React.useState('');
-    const [emailError, setEmailError] = React.useState('');
 
-    const handleEmailChange = (event: { target: { value: any; }; }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState<string | null>(null);
+    const [errors, setErrors] = useState<{ [key: string]: string[] } | null>(null);
+    const { setUser, setToken } = useStateContext();
+
+    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newEmail = event.target.value;
         setEmail(newEmail);
-
-        // Validazione dell'email con espressione regolare
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isValid = emailRegex.test(newEmail);
-        setEmailError(isValid ? '' : 'Email non valida');
+        setEmailError(isValid ? null : 'Email non valida');
     };
 
-
-    let navigate = useNavigate();
+    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
 
-        axios.post('api/auth/login', {
-            email: data.get('email'),
-            password: data.get('password')
-        })
-            .then((response) => {
-                console.log(response);
-                // Simulazione di accesso con successo
-                setAuthenticated(true);
-                // Reindirizza l'utente verso la route desiderata
-                navigate('/CalendarSecretary');
-            }, (error) => {
-                console.log(error);
+        axiosClient.post<SignInResponse>('/login', data)
+            .then(({ data }) => {
+                setUser(data.user);
+                setToken(data.token);
+                setErrors(null); // Reset errors on successful submission
+            })
+            .catch(err => {
+                const response = err.response;
+                if (response && response.status === 422) {
+                    setErrors(response.data.errors);
+                }
             });
-
     };
 
     return (
@@ -98,7 +94,18 @@ export default function SignIn({ setAuthenticated }: SignInProps) {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            value={password}
+                            onChange={handlePasswordChange}
                         />
+
+                        {errors &&
+                            <div className="alert">
+                                {Object.keys(errors).map(key => (
+                                    <p key={key}>{errors[key][0]}</p>
+                                ))}
+                            </div>
+                        }
+
                         <Button
                             type="submit"
                             fullWidth
@@ -126,3 +133,4 @@ export default function SignIn({ setAuthenticated }: SignInProps) {
         </ThemeProvider>
     );
 }
+

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Visita } from '../../../config/Visite';
+import { Visita } from '../../../configuration/Visite';
 import Slider from "../Slider"
 import ModalComponent from "./ModalComponent";
 
