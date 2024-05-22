@@ -10,6 +10,7 @@ interface User {
 
 export default function DefaultLayout() {
     const { user, token, setUser, setToken } = useStateContext();
+    console.log(user)
 
     if (!token) {
         return <Navigate to="/Login" />;

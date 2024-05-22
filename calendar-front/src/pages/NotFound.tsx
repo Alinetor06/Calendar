@@ -6,7 +6,7 @@ const NotFound: React.FC = () => {
         <div>
             <h1>404 - Pagina non trovata</h1>
             <p>La pagina che stai cercando potrebbe essere stata rimossa, rinominata o non è disponibile al momento.</p>
-            <p>Torna alla <a href="/">Home</a>.</p>
+            <p>Torna alla <a href="/">Pagina Precedente</a>.</p>
         </div>
     );
 }

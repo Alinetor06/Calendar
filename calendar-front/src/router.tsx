@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import DefaultLayout from "./components/layout/DefaultLayout";
 import GuestLayout from "./components/layout/GuestLayout";
-import Home from "./pages/Home/Home";
 import Login from "./pages/Login_Register/Login";
 import Registrazione from "./pages/Login_Register/Registrazione";
 import CalendarSecretary from "./pages/CalendarSecretary";
@@ -32,10 +31,6 @@ const router = createBrowserRouter([
         element: <GuestLayout />,
 
         children: [
-            {
-                path: '/Home',
-                element: <Home />
-            },
             {
                 path: '/Login',
                 element: <Login />
