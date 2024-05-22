@@ -103,7 +103,7 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
                     name: name,
                     email: email,
                     priority: parseInt(priority), // Assicurati che priority sia un numero
-                    date_visit: new Date(date), // Assicurati che la data venga parsata correttamente
+                    visit_day: new Date(date), // Assicurati che la data venga parsata correttamente
                     description: description,
                     tel: tel // Non c'è un campo 'tel' nel FormData, quindi lo lascio vuoto
                 };
@@ -118,7 +118,7 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Card sx={{ minWidth: 275 }}>
                 {visiteData.map((v, index) => {
-                    const visitDate = new Date(v.date_visit);
+                    const visitDate = new Date(v.visit_day);
                     const isPastDate = visitDate < today;
 
 
@@ -190,7 +190,7 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
                                             disablePast
                                             margin="normal"
                                             required
-                                            defaultValue={dayjs(v.date_visit)}
+                                            defaultValue={dayjs(v.visit_day)}
                                             label="Data della Visita"
                                             name="date"
                                             id="date_visit"

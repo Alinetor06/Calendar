@@ -27,6 +27,7 @@ class visiteFactory extends Factory
         return [
             'name' => fake()->realText(2),
             'email' => fake()->realText(200),
+            'user_id' => fake()->numberBetween(1, 10),
             'description' => fake()->realText(200),
             'visit_day' => fake()->dateTimeBetween(Carbon::now(), $maxDate),
             'priority' => fake()->numberBetween(1, 3),

@@ -19,13 +19,15 @@ class VisitResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'userId' => $this->userId,
             'name' => $this->name,
             'email' => $this->email,
-            'visit_day' => $this->visit_day->format('m-d-Y'),
+            'visit_day' => $this->visit_day->format('Y-m-d'), // Converti la data nel formato desiderato
             'description' => $this->description,
             'priority' => $this->priority,
             'tel' => $this->tel,
+            'user_id' => $this->user_id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

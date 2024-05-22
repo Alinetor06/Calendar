@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\VisitResource;
@@ -8,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVisitRequest;
 use App\Http\Requests\UpdateVisitRequest;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon; // Importa la classe Carbon per la manipolazione delle date
 
 class VisiteController extends Controller
 {
@@ -16,12 +17,17 @@ class VisiteController extends Controller
      */
     public function index()
     {
-        $visits = Visite::query()
-            ->where('user_id', request()->user()->id)
-            ->orderBy('visit_day')
-            ->get();
+        try {
+            $visits = Visite::query()
+                ->where('user_id', request()->user()->id)
+                ->orderBy('visit_day')
+                ->get();
 
-        return response()->json(['visite' => $visits]);
+            return response()->json(['visite' => $visits]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching visits: ' . $e->getMessage());
+            return response()->json(['error' => 'Error fetching visits.'], 500);
+        }
     }
 
     /**
@@ -29,17 +35,27 @@ class VisiteController extends Controller
      */
     public function store(StoreVisitRequest $request)
     {
-        $data = $request->validated();
-        $data['user_id'] = $request->user()->id;
-        $visite = Visite::create($data);
+        try {
+            $data = $request->validated();
+            $data['user_id'] = $request->user()->id;
 
-        return response()->json(new VisitResource($visite), 201);
+            \Log::info('Creating visit with data:', $data);
+
+            $data['visit_day'] = Carbon::createFromFormat('d/m/Y', $data['visit_day']); // Conversione del formato della data
+
+            $visite = Visite::create($data);
+
+            return response()->json(new VisitResource($visite), 201);
+        } catch (\Exception $e) {
+            Log::error('Error creating visit: ' . $e->getMessage());
+            return response()->json(['error' => 'Error creating visit.'], 500);
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Cerca le visite
      */
-    public function show(Request $request)
+    public function search(Request $request)
     {
         try {
             $user = $request->user();
@@ -59,7 +75,7 @@ class VisiteController extends Controller
             }
 
             if ($visitDay) {
-                $visits->where('visit_day', $visitDay);
+                $visits->whereDate('visit_day', $visitDay); // Usa whereDate per confrontare solo la data
             }
 
             $visits = $visits->orderBy('visit_day')->get();
@@ -68,22 +84,32 @@ class VisiteController extends Controller
                 return response()->json(['message' => 'Nessuna visita trovata per i criteri di ricerca forniti.'], 404);
             }
 
-            return response()->json(['visite' => $visits]);
+            return response()->json(['visits' => $visits]);
         } catch (\Exception $e) {
+            Log::error('Error fetching specific visits: ' . $e->getMessage());
             return response()->json(['error' => 'Si è verificato un errore durante la ricerca delle visite.'], 500);
         }
     }
+
+
+
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateVisitRequest $request, Visite $visite)
     {
-        $data = $request->validated();
-        $data['user_id'] = $request->user()->id;
-        $visite->update($data);
+        try {
+            $data = $request->validated();
+            $data['user_id'] = $request->user()->id;
+            $visite->update($data);
 
-        return response()->json(new VisitResource($visite), 200);
+            return response()->json(new VisitResource($visite), 200);
+        } catch (\Exception $e) {
+            Log::error('Error updating visit: ' . $e->getMessage());
+            return response()->json(['error' => 'Error updating visit.'], 500);
+        }
     }
 
     /**
@@ -91,8 +117,13 @@ class VisiteController extends Controller
      */
     public function destroy(Visite $visite)
     {
-        $visite->delete();
+        try {
+            $visite->delete();
 
-        return response()->json(['message' => 'Visita eliminata con successo']);
+            return response()->json(['message' => 'Visita eliminata con successo']);
+        } catch (\Exception $e) {
+            Log::error('Error deleting visit: ' . $e->getMessage());
+            return response()->json(['error' => 'Error deleting visit.'], 500);
+        }
     }
 }

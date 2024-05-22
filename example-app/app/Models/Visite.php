@@ -10,11 +10,16 @@ class Visite extends Model
     use HasFactory;
 
     protected $fillable = [
-        'userId',
         'name',
         'email',
-        'description',
         'visit_day',
-        'priority'
+        'description',
+        'priority',
+        'tel',
+        'user_id',
+    ];
+
+    protected $dates = [
+        'visit_day',
     ];
 }

@@ -29,19 +29,19 @@ export default function DatePicker({ onDateChange }: DatePickerProps) {
 
 
     const getData = () => {
-        setIsLoading(true)
-        axiosClient.get('/visite', {
-        })
+        setIsLoading(true);
+        axiosClient.get<{ visite: Visita[] }>('/visits', {})
             .then(({ data }) => {
                 console.log(data);
-                setIsLoading(false)
-                setDati(data);
+                setIsLoading(false);
+                setDati(data.visite); // Accedi all'array di visite
             })
             .catch((error) => {
-                setIsLoading(false)
+                setIsLoading(false);
                 console.log(error);
             });
-    }
+    };
+
 
     const handleDateChange = (date: Dayjs | null) => {
         setSelectedDate(date);
@@ -57,7 +57,7 @@ export default function DatePicker({ onDateChange }: DatePickerProps) {
     };
 
     // Estrai solo le date dallo stato dati
-    const highlightedDates = dati.map(visita => visita.date_visit);
+    const highlightedDates = dati.map(visita => new Date(visita.visit_day));
 
     function ServerDay(props: PickersDayProps<Dayjs> & { highlightedDates?: Date[] }) {
         const { highlightedDates = [], day, outsideCurrentMonth, ...other } = props;

@@ -6,7 +6,7 @@ import { LocalizationProvider, DateField } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import axiosClient from '../../../axios-client';
 import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '../../../context/ContextProvider';
+//import { useStateContext } from '../../../context/ContextProvider';
 
 
 const priority_value = [
@@ -20,7 +20,7 @@ const priority_value = [
 const Save_Visit_Card: React.FC = () => {
 
     const navigate = useNavigate();
-    const { user } = useStateContext();
+    //const { user } = useStateContext();
 
     const [priority, setPriority] = useState(0);
 
@@ -55,7 +55,6 @@ const Save_Visit_Card: React.FC = () => {
         const data = new FormData(event.currentTarget);
 
         axiosClient.post('/visits', {
-            userId: user.id,
             name: data.get('name'),
             email: data.get('email'),
             visit_day: data.get('visit_day'),

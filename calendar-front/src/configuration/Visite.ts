@@ -5,6 +5,8 @@ export type Visita = {
     description: string
     priority: number
     tel: string
-    date_visit: Date
+    visit_day: Date
+    user_id: number
+    created_at?: Date
+    updated_at?: Date
 }
-
