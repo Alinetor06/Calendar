@@ -8,6 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 //configurazioni
 import { Visita } from '../../../configuration/Visite';
+import axiosClient from '../../../axios-client';
 
 
 
@@ -43,8 +44,6 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
 
 
 
-
-
     const [attivo, setAttivo] = useState(attiva); // Inizialmente disattivo
 
     const handleToggleEdit = () => {
@@ -54,11 +53,6 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
     };
 
     const today = new Date();
-
-
-
-    const [updatedVisite, setUpdatedVisite] = useState(visiteData);
-
 
     //Gestione errori
 
@@ -80,39 +74,84 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
         return /^[a-zA-Z ]+$/.test(name.trim());// Allowing spaces in the name
     };
 
+    // Dentro il componente View_Edit_Save_Cards
 
-    function handleSaveNewVisit(event: React.FormEvent<HTMLFormElement>, visitId: number): void {
+    // Aggiungi uno stato per tenere traccia delle visite aggiornate localmente
+    const [updatedVisite, setUpdatedVisite] = useState(visiteData.map(visit => ({ ...visit })));
+
+    // Funzione per aggiornare lo stato delle visite
+    const handleUpdateVisit = (updatedVisit: Visita, visitId: number) => {
+        setUpdatedVisite(prevState => {
+            return prevState.map(visit => {
+                if (visit.id === visitId) {
+                    return { ...visit, ...updatedVisit };
+                } else {
+                    return visit;
+                }
+            });
+        });
+    };
+
+    // Funzione per salvare le modifiche della visita
+    const handleSaveNewVisit = async (event: React.FormEvent<HTMLFormElement>, visitId: number) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
         // Estrai i valori dal FormData
         const name = data.get('name') as string;
         const email = data.get('email') as string;
-        const date = data.get('date') as string; // Assicurati che l'id sia 'date' e non 'date_visit'
+        const date = data.get('date') as string;
         const priority = data.get('priority') as string;
         const description = data.get('description') as string;
         const tel = data.get('tel') as string;
 
-        // Aggiorna lo stato newVisit con i nuovi valori
-        setUpdatedVisite(prevState => {
-            const updatedVisiteCopy = [...prevState];
-            const visitIndex = updatedVisiteCopy.findIndex(visit => visit.id === visitId);
-            if (visitIndex !== -1) {
-                updatedVisiteCopy[visitIndex] = {
-                    ...updatedVisiteCopy[visitIndex],
-                    name: name,
-                    email: email,
-                    priority: parseInt(priority), // Assicurati che priority sia un numero
-                    visit_day: new Date(date), // Assicurati che la data venga parsata correttamente
-                    description: description,
-                    tel: tel // Non c'è un campo 'tel' nel FormData, quindi lo lascio vuoto
-                };
-            }
-            return updatedVisiteCopy;
-        });
-    }
+        // Trova la visita corrispondente a visitId in visiteData
+        const visita = visiteData.find(visit => visit.id === visitId);
 
-    console.log(updatedVisite)
+        if (!visita) {
+            console.error('Visita non trovata');
+            return;
+        }
+
+        // Aggiorna lo stato updatedVisite con i nuovi valori
+        const updatedVisit = {
+            id: visita.id,
+            user_id: visita.user_id,
+            name,
+            email,
+            priority: parseInt(priority), // Assicurati che priority sia un numero
+            visit_day: new Date(date), // Assicurati che la data venga parsata correttamente
+            description,
+            tel
+        };
+
+        // Aggiorna lo stato delle visite locali
+        handleUpdateVisit(updatedVisit, visitId);
+
+        try {
+            // Formatta la data nel formato "YYYY-MM-DD"
+            const nextDay = new Date(updatedVisit.visit_day);
+            nextDay.setDate(nextDay.getDate() + 1);
+            const formattedDate = nextDay.toISOString().split('T')[0];
+
+            console.log(formattedDate)
+            // Aggiorna l'oggetto updatedVisit con la data formattata
+            const updatedVisitWithFormattedDate = {
+                ...updatedVisit,
+                visit_day: formattedDate,
+            };
+
+            console.log(updatedVisitWithFormattedDate)
+
+            // Effettua la chiamata PUT con l'oggetto aggiornato
+            const response = await axiosClient.put(`/visits/${visitId}`, updatedVisitWithFormattedDate);
+            console.log('Visita aggiornata:', response.data);
+        } catch (error) {
+            console.error('Errore durante l\'aggiornamento della visita:', error);
+        }
+    };
+
+
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>

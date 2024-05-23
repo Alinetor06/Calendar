@@ -31,7 +31,7 @@ export default function DefaultLayout() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const { data } = await axiosClient.get('/api/CalendarSecretary');
+                const { data } = await axiosClient.get('/user');
                 setUser(data as User);
             } catch (error) {
                 console.error("Errore durante il recupero dei dati dell'utente", error);

@@ -21,7 +21,7 @@ class VisitResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'visit_day' => $this->visit_day->format('Y-m-d'), // Converti la data nel formato desiderato
+            'visit_day' => $this->visit_day, // Converti la data nel formato desiderato
             'description' => $this->description,
             'priority' => $this->priority,
             'tel' => $this->tel,

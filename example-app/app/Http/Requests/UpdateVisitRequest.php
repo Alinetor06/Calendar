@@ -23,7 +23,7 @@ class UpdateVisitRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:55',
-            'email' => 'required|email' . $this->id,
+            'email' => 'required|email|max:255',
             'visit_day' => 'required|date',
             'description' => 'required|string|max:150',
             'priority' => 'required|integer|min:0|max:3',

@@ -100,10 +100,25 @@ class VisiteController extends Controller
      */
     public function update(UpdateVisitRequest $request, Visite $visite)
     {
+        Log::info('Updating visit with ID: ' . $visite->id);
+
+        Log::info('Request data: ' . json_encode($request->all()));
+
         try {
             $data = $request->validated();
+            Log::info('Validated data:', $data);
+
             $data['user_id'] = $request->user()->id;
+            Log::info('User ID:', ['user_id' => $data['user_id']]);
+
+            // Rimuovi l'assegnazione del campo created_at per mantenerlo invariato
+            unset($data['created_at']);
+
+            // Aggiungi il campo updated_at con il timestamp corrente
+            $data['updated_at'] = now();
+
             $visite->update($data);
+            Log::info('Visit updated successfully.');
 
             return response()->json(new VisitResource($visite), 200);
         } catch (\Exception $e) {
@@ -111,6 +126,8 @@ class VisiteController extends Controller
             return response()->json(['error' => 'Error updating visit.'], 500);
         }
     }
+
+
 
     /**
      * Remove the specified resource from storage.

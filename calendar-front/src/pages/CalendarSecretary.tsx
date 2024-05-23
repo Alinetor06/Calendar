@@ -82,7 +82,11 @@ const CalendarSecretary: React.FC<{}> = () => {
                     </div>
                 </div>
 
-                <CardSlider data={visits} />
+                {isLoading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <CardSlider data={visits} />
+                )}
             </div>
         </>
     );
