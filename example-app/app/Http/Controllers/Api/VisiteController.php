@@ -97,6 +97,10 @@ class VisiteController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param \App\Http\Requests\UpdateVisitRequest $request
+     * @param \App\Models\Visite $visite
+     * @return \Illuminate\Http\Response
      */
     public function update(UpdateVisitRequest $request, Visite $visite)
     {
@@ -117,6 +121,8 @@ class VisiteController extends Controller
             // Aggiungi il campo updated_at con il timestamp corrente
             $data['updated_at'] = now();
 
+            Log::info('Validated + updated_at:', $data);
+
             $visite->update($data);
             Log::info('Visit updated successfully.');
 
@@ -128,9 +134,11 @@ class VisiteController extends Controller
     }
 
 
-
     /**
      * Remove the specified resource from storage.
+     *
+     * @param \App\Models\Visite $visite
+     * @return \Illuminate\Http\Response
      */
     public function destroy(Visite $visite)
     {

@@ -134,10 +134,12 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
             nextDay.setDate(nextDay.getDate() + 1);
             const formattedDate = nextDay.toISOString().split('T')[0];
 
+            const { id, user_id, ...updatedVisitWithoutIdAndUserId } = updatedVisit;
+
             console.log(formattedDate)
             // Aggiorna l'oggetto updatedVisit con la data formattata
             const updatedVisitWithFormattedDate = {
-                ...updatedVisit,
+                ...updatedVisitWithoutIdAndUserId,
                 visit_day: formattedDate,
             };
 
@@ -151,7 +153,7 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
         }
     };
 
-
+    console.log(updatedVisite)
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
