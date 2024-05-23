@@ -54,10 +54,15 @@ const Save_Visit_Card: React.FC = () => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
+        const visitDay = new Date(data.get('visit_day') as string);
+        visitDay.setDate(visitDay.getDate() + 1);
+
+        const formattedDate = visitDay.toISOString().split('T')[0];
+
         axiosClient.post('/visits', {
             name: data.get('name'),
             email: data.get('email'),
-            visit_day: data.get('visit_day'),
+            visit_day: formattedDate,
             priority: data.get('priority'),
             description: data.get('description'),
             tel: data.get('tel')

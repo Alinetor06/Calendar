@@ -36,6 +36,24 @@ const priority_value = [
 
 
 const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
+
+
+    const onDeleteClick = (visit: Visita) => {
+        if (!window.confirm("Sei sicuro di voler eliminare questa visita?")) {
+            return;
+        }
+        axiosClient.delete(`/visits/${visit.id}`)
+            .then(response => {
+                console.log('Visita eliminata:', response.data);
+                // Puoi aggiungere ulteriori azioni qui, ad esempio un aggiornamento della lista delle visite
+            })
+            .catch(error => {
+                console.error('Errore durante l\'eliminazione della visita:', error);
+            });
+    }
+
+
+
     /**
        * 
        * UPDATE VISITE
@@ -300,6 +318,9 @@ const View_Edit_Save_Cards: React.FC<CardProps> = ({ visiteData, attiva }) => {
 
                                                     <Button
                                                         id='ButtonDelite'
+                                                        onClick={() => {
+                                                            onDeleteClick
+                                                        }}
                                                         size="small"
                                                         variant="contained"
                                                         color="error"

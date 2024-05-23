@@ -41,8 +41,6 @@ class VisiteController extends Controller
 
             \Log::info('Creating visit with data:', $data);
 
-            $data['visit_day'] = Carbon::createFromFormat('d/m/Y', $data['visit_day']); // Conversione del formato della data
-
             $visite = Visite::create($data);
 
             return response()->json(new VisitResource($visite), 201);
