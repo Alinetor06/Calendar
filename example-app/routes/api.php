@@ -16,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/visits/search', [VisiteController::class, 'search']);
     Route::put('/visits/{visit}', [VisiteController::class, 'update']);
     Route::delete('/visits/{visit}', [VisiteController::class, 'destroy']);
+
 });
 
 Route::post('/signup', [AuthController::class, 'signup']);

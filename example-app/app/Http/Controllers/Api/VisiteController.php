@@ -102,6 +102,7 @@ class VisiteController extends Controller
      */
     public function update(UpdateVisitRequest $request, Visite $visite)
     {
+        Log::info('Updating visit : ' . $visite);
         Log::info('Updating visit with ID: ' . $visite->id);
 
         Log::info('Request data: ' . json_encode($request->all()));
